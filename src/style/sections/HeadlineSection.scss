@@ -1,0 +1,43 @@
+
+
+.headline-section {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6rem;
+  text-align: center;
+  color: var(--main);
+}
+
+.headline-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 15rem;
+  line-height: 1;
+}
+
+.headline-letter {
+  display: inline-block;
+  opacity: 0;
+  will-change: transform, text-shadow, filter;
+  text-shadow: none;
+}
+
+.headline-letter-slash {
+  font-weight: 500;
+  transform-origin: center;
+}
+
+.headline-subtitle {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.05em;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-family: 'Space Mono', 'IBM Plex Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
