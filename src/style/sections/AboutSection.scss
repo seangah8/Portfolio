@@ -1,12 +1,23 @@
 .about-section {
-    background-color: aliceblue;
+    background-color: rgb(87, 4, 87);
     min-height: 100vh;
     display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
+    flex-direction: column;
     padding: 2rem;
 }
 
 .about-section h2 {
+    font-size: 2rem;
+    color: var(--main);
+}
+
+ul {
+    margin-top: 5rem;
+    margin-left: 2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    color: var(--main);
     font-size: 2rem;
 }
