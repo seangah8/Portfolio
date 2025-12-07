@@ -9,6 +9,10 @@
 .about-section h2 {
     font-size: 2rem;
     color: var(--main);
+
+    span {
+        display: inline-block;
+    }
 }
 
 ul {
