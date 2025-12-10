@@ -3,12 +3,13 @@
 @use './sections/HeadlineSection';
 @use './sections/AboutSection';
 @use './sections/ProjectsSection';
+@use './components/AboutInfo';
 
 body {
     overflow-x: hidden;
     padding: 0;
     margin: 0;
-    background-color: var(--background);
+    background-color: var(--background1);
     font-family: 'Roboto', sans-serif;
     h1{margin: 0;}
     h2{margin: 0;}

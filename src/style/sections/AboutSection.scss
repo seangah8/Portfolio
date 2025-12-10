@@ -1,9 +1,7 @@
 .about-section {
-    background-color: rgb(87, 4, 87);
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
-    padding: 2rem;
+    justify-content: space-between;
 }
 
 .about-section h2 {
@@ -12,6 +10,7 @@
 
     span {
         display: inline-block;
+        color: rgb(108, 255, 255);
     }
 }
 
