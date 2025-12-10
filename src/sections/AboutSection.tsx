@@ -46,6 +46,8 @@ export function AboutSection() {
   },
   ]
 
+  const allFacts = [meFact, ...funFacts]
+
   useEffect(() => {
     const ctx = gsap.context(() => {
       if (!sectionRef.current || !titleRef.current) return
@@ -200,12 +202,9 @@ export function AboutSection() {
   }, [])
 
   const showMeFact = hasMeShifted && activeFactIndex === null
-  const currentFact =
-    showMeFact && meFact
-      ? meFact
-      : activeFactIndex !== null
-        ? funFacts[activeFactIndex] || meFact
-        : null
+
+  const activeImageIndex =
+    showMeFact ? 0 : activeFactIndex !== null ? activeFactIndex + 1 : null
 
   return (
     <section className="about-section" ref={sectionRef}>
@@ -224,13 +223,7 @@ export function AboutSection() {
           ))}
         </ul>
       </div>
-      {currentFact && (
-        <AboutInfo
-          image={currentFact.image}
-          title={currentFact.title}
-          description={currentFact.description}
-        />
-      )}
+      <AboutInfo facts={allFacts} activeIndex={activeImageIndex} />
     </section>
   )
 }

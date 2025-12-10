@@ -1,5 +1,26 @@
 .about-info {
-    background-color: white;
-    width: 50vw;
-    height: 100%;
+  position: relative;
+  width: 50vw;
+  height: 100%;
+  overflow: hidden;
+
+  &__item {
+    position: absolute;
+    inset: 0;
+    transform: translateX(120%);
+    opacity: 0;
+    transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    &--active {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
 }
