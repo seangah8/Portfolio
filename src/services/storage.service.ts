@@ -1,0 +1,43 @@
+export const storageService = {
+    getMeFact,
+    getFunFacts,
+}
+
+
+function getMeFact() {
+    return {
+        title: 'fun fact 0',
+        image: '/about_info_img0.jpg',
+        description: 'description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 description0 '
+    }
+}
+
+function getFunFacts() {
+    return [
+        {
+        title: 'fun fact 1',
+        image: '/about_info_img1.jpg',
+        description: 'description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 '
+    },
+    {
+        title: 'fun fact 2',
+        image: '/about_info_img2.jpg',
+        description: 'description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 description2 '
+    },
+    {
+        title: 'fun fact 3',
+        image: '/about_info_img3.jpg',
+        description: 'description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 description3 '
+    },
+    {
+        title: 'fun fact 4',
+        image: '/about_info_img4.jpg',
+        description: 'description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 description4 '
+    },
+    {
+        title: 'fun fact 5',
+        image: '/about_info_img5.jpg',
+        description: 'description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 description5 '
+    },
+  ]
+}

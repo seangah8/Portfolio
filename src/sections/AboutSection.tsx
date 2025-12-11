@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { AboutInfo } from '../components/AboutInfo'
+import { storageService } from '../services/storage.service'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -12,41 +13,7 @@ export function AboutSection() {
   const [activeFactIndex, setActiveFactIndex] = useState<number | null>(null)
   const [hasMeShifted, setHasMeShifted] = useState(false)
 
-  const meFact = {
-    title: 'fun fact 0',
-    image: '/about_info_img0.jpg',
-    description: 'description0'
-  }
-
-  const funFacts = [
-    {
-      title: 'fun fact 1',
-      image: '/about_info_img1.jpg',
-      description: 'description1'
-  },
-  {
-      title: 'fun fact 2',
-      image: '/about_info_img2.jpg',
-      description: 'description2'
-  },
-  {
-      title: 'fun fact 3',
-      image: '/about_info_img3.jpg',
-      description: 'description3'
-  },
-  {
-      title: 'fun fact 4',
-      image: '/about_info_img4.jpg',
-      description: 'description4'
-  },
-  {
-      title: 'fun fact 5',
-      image: '/about_info_img5.jpg',
-      description: 'description5'
-  },
-  ]
-
-  const allFacts = [meFact, ...funFacts]
+  const allFacts = [storageService.getMeFact(), ...storageService.getFunFacts()]
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -206,6 +173,10 @@ export function AboutSection() {
   const activeImageIndex =
     showMeFact ? 0 : activeFactIndex !== null ? activeFactIndex + 1 : null
 
+  // Description should only appear once the user has fully entered the section
+  // (i.e. at least reached the "ME" slot once) and an image is active.
+  const showDescription = activeImageIndex !== null
+
   return (
     <section className="about-section" ref={sectionRef}>
       <div className='left-side'>
@@ -216,14 +187,18 @@ export function AboutSection() {
           </span>
         </h2>
         <ul>
-          {funFacts.map((fact, index) => (
+          {storageService.getFunFacts().map((fact, index) => (
             <li key={index} className="about-fact">
               <h4>{fact.title}</h4>
             </li>
           ))}
         </ul>
       </div>
-      <AboutInfo facts={allFacts} activeIndex={activeImageIndex} />
+      <AboutInfo
+        facts={allFacts}
+        activeIndex={activeImageIndex}
+        showDescription={showDescription}
+      />
     </section>
   )
 }

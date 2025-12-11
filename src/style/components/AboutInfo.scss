@@ -3,6 +3,9 @@
   width: 50vw;
   height: 100%;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &__item {
     position: absolute;
@@ -22,5 +25,30 @@
       transform: translateX(0);
       opacity: 1;
     }
+  }
+
+  .description-area {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 10% 10% 0% 10%;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    opacity: 0;
+    animation: description-fade-in 0.2s ease-in-out forwards;
+
+    p {
+    color: white;
+      font-size: 1.2rem;
+    }
+  }
+}
+
+@keyframes description-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
