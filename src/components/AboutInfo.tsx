@@ -24,11 +24,75 @@ export function AboutInfo({
 }: AboutInfoProps) {
   const [typedText, setTypedText] = useState('')
 
+  const clamp = (value: number, min: number, max: number) =>
+    Math.max(min, Math.min(max, value))
+
+  const randBetween = (min: number, max: number) =>
+    min + Math.random() * (max - min)
+
+  // Generate 3 random positions; if any two are too close, generate again.
+  // Distance is calculated in percentage space (left/top are % within `__images-row`).
+  const generate3RandomPlaces = () => {
+    // Matches `.about-info__image-wrapper { width: 28% }`
+    // and approximate 4:3 aspect ratio (28 * 3/4 = 21).
+    const BOX_W = 28
+    const BOX_H = 21
+
+    // Keep centers away from edges to reduce clipping.
+    const LEFT_MIN = BOX_W / 2 + 2
+    const LEFT_MAX = 100 - (BOX_W / 2 + 2)
+    const TOP_MIN = BOX_H / 2 + 2
+    const TOP_MAX = 100 - (BOX_H / 2 + 2)
+
+    // Increase to force more separation between images.
+    const MIN_DISTANCE = 30
+
+    const isTooClose = (
+      a: { left: number; top: number },
+      b: { left: number; top: number }
+    ) => {
+      const dx = a.left - b.left
+      const dy = a.top - b.top
+      return Math.hypot(dx, dy) < MIN_DISTANCE
+    }
+
+    let last: Array<{ left: number; top: number; x: number; y: number }> = []
+    const MAX_ATTEMPTS = 40
+
+    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
+      const places = Array.from({ length: 3 }, () => {
+        const left = clamp(randBetween(LEFT_MIN, LEFT_MAX), LEFT_MIN, LEFT_MAX)
+        const top = clamp(randBetween(TOP_MIN, TOP_MAX), TOP_MIN, TOP_MAX)
+        // Small pixel jitter just for "organic" feel (not part of distance check)
+        const x = randBetween(-18, 18)
+        const y = randBetween(-18, 18)
+        return { left, top, x, y }
+      })
+
+      const [a, b, c] = places
+      if (
+        !isTooClose(a, b) &&
+        !isTooClose(a, c) &&
+        !isTooClose(b, c)
+      ) {
+        return places
+      }
+
+      last = places
+    }
+
+    // Fallback if we couldn't find a perfect layout quickly.
+    return last
+  }
+
   // Pre-generate stable random rotations for up to three images per fact.
   // We keep them in a ref so they are created only once on mount and
   // do NOT change when the active fact changes.
   const imageRotationsRef = useRef<number[][] | null>(null)
-  if (!imageRotationsRef.current) {
+  if (
+    !imageRotationsRef.current ||
+    imageRotationsRef.current.length !== facts.length
+  ) {
     imageRotationsRef.current = facts.map(() =>
       Array.from({ length: 3 }, () => {
         const sign = Math.random() < 0.5 ? -1 : 1
@@ -38,6 +102,19 @@ export function AboutInfo({
     )
   }
   const imageRotations = imageRotationsRef.current
+
+  // Pre-generate stable random positions for up to three images per fact.
+  // Like rotations, these are created only once and then kept stable.
+  const imagePositionsRef = useRef<
+    Array<Array<{ left: number; top: number; x: number; y: number }>> | null
+  >(null)
+  if (
+    !imagePositionsRef.current ||
+    imagePositionsRef.current.length !== facts.length
+  ) {
+    imagePositionsRef.current = facts.map(() => generate3RandomPlaces())
+  }
+  const imagePositions = imagePositionsRef.current
 
   // Track which items are leaving when scrolling up, so we can reverse-stagger their exit
   const [leavingIndex, setLeavingIndex] = useState<number | null>(null)
@@ -96,6 +173,7 @@ export function AboutInfo({
     <div className="about-info">
       {facts.map((fact, index) => {
         const rotations = imageRotations[index] || []
+        const positions = imagePositions[index] || []
 
         // Prefer the new `images` array, but gracefully fall back to the old `image` field
         const rawImages =
@@ -126,7 +204,11 @@ export function AboutInfo({
                   className="about-info__image-wrapper"
                   style={
                     {
-                      '--rotation': `${rotations[imageIndex] || 0}deg`
+                      '--rotation': `${rotations[imageIndex] || 0}deg`,
+                      '--left': `${positions[imageIndex]?.left ?? 50}%`,
+                      '--top': `${positions[imageIndex]?.top ?? 50}%`,
+                      '--x': `${positions[imageIndex]?.x ?? 0}px`,
+                      '--y': `${positions[imageIndex]?.y ?? 0}px`
                     } as React.CSSProperties
                   }
                 >
