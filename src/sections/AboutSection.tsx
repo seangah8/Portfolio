@@ -13,7 +13,15 @@ export function AboutSection() {
   const [activeFactIndex, setActiveFactIndex] = useState<number | null>(null)
   const [hasMeShifted, setHasMeShifted] = useState(false)
 
-  const allFacts = [storageService.getMeFact(), ...storageService.getFunFacts()]
+  // Normalize facts coming from storage so AboutInfo always receives
+  // { title, description, images: string[] }
+  const allFacts = [storageService.getMeFact(), ...storageService.getFunFacts()].map(
+    fact => ({
+      title: fact.title,
+      description: fact.description,
+      images: [fact.image1, fact.image2, fact.image3].filter(Boolean)
+    })
+  )
 
   useEffect(() => {
     const ctx = gsap.context(() => {
