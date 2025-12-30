@@ -23,6 +23,9 @@ export function AboutInfo({
   showDescription
 }: AboutInfoProps) {
   const [typedText, setTypedText] = useState('')
+  const [seenFactIndices, setSeenFactIndices] = useState<Set<number>>(
+    () => new Set()
+  )
 
   const clamp = (value: number, min: number, max: number) =>
     Math.max(min, Math.min(max, value))
@@ -152,6 +155,20 @@ export function AboutInfo({
       return
     }
 
+    // If the user has already visited this fact before, skip the typewriter
+    // animation and show the full description immediately.
+    if (seenFactIndices.has(activeIndex)) {
+      setTypedText(fullText)
+      return
+    }
+
+    // Mark as seen the first time we show it, so future visits are instant.
+    setSeenFactIndices(prev => {
+      const next = new Set(prev)
+      next.add(activeIndex)
+      return next
+    })
+
     setTypedText('')
     let index = 0
 
@@ -167,6 +184,9 @@ export function AboutInfo({
     return () => {
       window.clearInterval(intervalId)
     }
+    // Intentionally omit `seenFactIndices` from deps:
+    // we update it inside this effect, and we don't want that update to re-run
+    // the effect and short-circuit the first-time typewriter animation.
   }, [showDescription, activeIndex, facts])
 
   return (
