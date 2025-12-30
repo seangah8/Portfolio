@@ -45,7 +45,7 @@ export function AboutInfo({
     const TOP_MAX = 100 - (BOX_H / 2 + 2)
 
     // Increase to force more separation between images.
-    const MIN_DISTANCE = 30
+    const MIN_DISTANCE = 50
 
     const isTooClose = (
       a: { left: number; top: number },
@@ -57,7 +57,7 @@ export function AboutInfo({
     }
 
     let last: Array<{ left: number; top: number; x: number; y: number }> = []
-    const MAX_ATTEMPTS = 40
+    const MAX_ATTEMPTS = 100
 
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
       const places = Array.from({ length: 3 }, () => {
@@ -162,7 +162,7 @@ export function AboutInfo({
       if (index >= fullText.length) {
         window.clearInterval(intervalId)
       }
-    }, 15) // 0.03s per character for a smooth typewriter effect
+    }, 20) // 0.02s per character for a smooth typewriter effect
 
     return () => {
       window.clearInterval(intervalId)

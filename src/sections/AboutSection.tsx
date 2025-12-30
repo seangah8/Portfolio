@@ -31,7 +31,7 @@ export function AboutSection() {
       const titleTween = gsap.fromTo(
         titleRef.current,
         { fontSize: '2rem' },
-        { fontSize: '8rem', paused: true }
+        { fontSize: '6rem', paused: true }
       )
 
       // Get list items and prepare them for reveal + pinned animation
@@ -187,7 +187,7 @@ export function AboutSection() {
 
   return (
     <section className="about-section" ref={sectionRef}>
-      <div className='left-side'>
+      <div className="left-side">
         <h2 ref={titleRef}>
           About{' '}
           <span ref={myselfRef}>
@@ -197,7 +197,7 @@ export function AboutSection() {
         <ul>
           {storageService.getFunFacts().map((fact, index) => (
             <li key={index} className="about-fact">
-              <h4>{fact.title}</h4>
+              <p>{fact.title}</p>
             </li>
           ))}
         </ul>

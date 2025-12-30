@@ -2,24 +2,36 @@
     min-height: 100vh;
     display: flex;
     justify-content: space-between;
-}
+    font-family: "Montserrat", sans-serif;
 
-.about-section h2 {
-    font-size: 2rem;
-    color: var(--main);
+    .left-side {
+        padding: 3%;
+        height: 90%;
+    }
+
+    h2 {
+        margin: 3rem 0 2rem 2rem;
+        font-weight: 400;
+        color: var(--main);
+    }   
 
     span {
         display: inline-block;
     }
-}
 
-ul {
-    margin-top: 5rem;
-    margin-left: 2rem;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-    color: var(--main);
-    font-size: 2rem;
+    ul {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-left: 7rem;
+        gap: 2rem;
+        color: var(--main);
+        font-size: 1.5rem;
+        font-weight: 400;
+    }           
+
+    .about-fact {
+        will-change: transform;
+        
+    }
 }
