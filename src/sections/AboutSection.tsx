@@ -190,13 +190,21 @@ export function AboutSection() {
       <div className="left-side">
         <h2 ref={titleRef}>
           About{' '}
-          <span ref={myselfRef}>
+          <span
+            ref={myselfRef}
+            className={showMeFact ? 'about-section__me about-section__me--active' : 'about-section__me'}
+          >
             ME
           </span>
         </h2>
         <ul>
           {storageService.getFunFacts().map((fact, index) => (
-            <li key={index} className="about-fact">
+            <li
+              key={index}
+              className={
+                'about-fact' + (activeFactIndex === index ? ' about-fact--active' : '')
+              }
+            >
               <p>{fact.title}</p>
             </li>
           ))}

@@ -34,4 +34,22 @@
         will-change: transform;
         
     }
+
+    // Fact title color transition + active highlight
+    .about-fact p {
+        transition: color 0.2s ease-in-out;
+    }
+
+    .about-fact--active p {
+        color: var(--main2);
+    }
+
+    // "ME" highlight: color only the span (not the whole heading)
+    .about-section__me {
+        transition: color 0.2s ease-in-out;
+    }
+
+    .about-section__me--active {
+        color: var(--main2);
+    }
 }
