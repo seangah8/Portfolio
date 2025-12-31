@@ -179,7 +179,7 @@ export function AboutInfo({
       if (index >= fullText.length) {
         window.clearInterval(intervalId)
       }
-    }, 20) // 0.02s per character for a smooth typewriter effect
+    }, 25) // 0.02s per character for a smooth typewriter effect
 
     return () => {
       window.clearInterval(intervalId)
