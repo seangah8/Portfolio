@@ -1,6 +1,7 @@
 export const storageService = {
     getMeFact,
     getFunFacts,
+    getProjects,
 }
 
 
@@ -77,4 +78,33 @@ function getFunFacts() {
             When I’m not at the computer, you’ll usually find me at the piano, working out, or cooking something - all the things that help me clear my head and keep a good balance in life.`
     },
   ]
+}
+
+function getProjects() {
+    return [
+        {
+            title: 'Project 1',
+            images: [
+                '/projects_section/screen_shot1.png', 
+                '/projects_section/screen_shot2.png', 
+                '/projects_section/screen_shot3.png',
+            ],
+        },
+        {
+            title: 'Project 2',
+            images: [
+                '/projects_section/screen_shot4.png',
+                '/projects_section/screen_shot5.png',
+            ],
+        },
+        {
+            title: 'Project 3',
+            images: [
+                '/projects_section/screen_shot6.png',
+                '/projects_section/screen_shot7.png',
+                '/projects_section/screen_shot8.png',
+                '/projects_section/screen_shot9.png',
+            ],
+        },
+    ]
 }

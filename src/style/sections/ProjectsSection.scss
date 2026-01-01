@@ -4,7 +4,45 @@
     align-items: center;
     justify-content: center;
 
-    img {
-        height: 60%;
+    .laptop {
+        position: relative;
+        height: 50%;
+
+        .laptop-frame {
+            height: 100%;
+            width: auto;
+            display: block;
+        }
+
+        .laptop-screen {
+            position: absolute;
+            top: 14%;
+            left: 9%;
+            width: 82%;
+            height: 46.5%;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        // Vertical "strip" of images that we translate upward while pinned,
+        // creating the illusion of scrolling through the laptop screen.
+        .laptop-slides {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            will-change: transform;
+
+            img {
+                width: 100%;
+                height: 100%;
+                flex: 0 0 100%;
+                object-fit: cover;
+                display: block;
+            }
+        }
     }
+
+
+
 }
