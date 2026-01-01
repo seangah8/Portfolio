@@ -1,7 +1,7 @@
 export function ProjectsSection() {
   return (
     <section className="projects-section">
-      <h2>Projects</h2>
+      <img src="/projects_section/laptop.png" alt="monitor" />
     </section>
   )
 }

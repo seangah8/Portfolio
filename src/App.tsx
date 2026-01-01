@@ -17,9 +17,9 @@ export default function App() {
 
 /*
   TODO:
-    1. projects title in the middle of the screen
-    2. after full enter the title shifs left togeter with a monitor/laptop image
-    3. when scrolling the monitor shows images of the projects, each coming from the botton and stimulate an inside scroll
+    1. when scrolling the monitor shows images of the projects, each coming from the botton and stimulate an inside scroll
+    2. add projects title in the middle of the screen at start
+    3. after full enter the title shifs left togeter with a monitor/laptop image
     4. for each project there will be a title above the monitor that comes from right and the prev leave from left
     5. adding notes that appear from the sides in each project while scrolling 
     6. make sure the background color chnages while scrolling
