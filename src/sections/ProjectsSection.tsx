@@ -78,31 +78,51 @@ export function ProjectsSection() {
         }
       })
 
-      gsap.to(slidesRef.current, {
+      const pxPerImage = 400
+      const holdPx = pxPerImage // first "chunk" of scroll keeps image #1 fully visible
+      const totalScrollPx = holdPx + (slides.length - 1) * pxPerImage
+      const holdProgress = totalScrollPx > 0 ? holdPx / totalScrollPx : 0
+
+      // We drive this tween manually so we can add the initial "hold" distance.
+      const slidesTween = gsap.to(slidesRef.current, {
         yPercent: -(slides.length - 1) * 100,
         ease: 'none',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: `+=${(slides.length - 1) * 400}`,
-          pin: true,
-          scrub: true,
-          anticipatePin: 1,
-          onUpdate: self => {
-            scrollDirectionRef.current = (self.direction || 1) as 1 | -1
+        paused: true
+      })
 
-            const maxIndex = slides.length - 1
-            const nextIndex = Math.max(0, Math.min(maxIndex, Math.round(self.progress * maxIndex)))
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: `+=${totalScrollPx}`,
+        pin: true,
+        scrub: true,
+        anticipatePin: 1,
+        onUpdate: self => {
+          scrollDirectionRef.current = (self.direction || 1) as 1 | -1
 
-            if (nextIndex === lastSlideIndexRef.current) return
-            lastSlideIndexRef.current = nextIndex
+          // Hold the first image for the first "holdProgress" chunk of scroll.
+          const raw = self.progress
+          const moveProgress =
+            raw <= holdProgress ? 0 : (raw - holdProgress) / Math.max(0.0001, 1 - holdProgress)
+          const clampedMoveProgress = Math.max(0, Math.min(1, moveProgress))
 
-            const nextSlide = slides[nextIndex]
-            if (!nextSlide) return
+          slidesTween.progress(clampedMoveProgress)
 
-            setCurrentProjectTitle(nextSlide.projectTitle)
-            setCurrentProjectImageIndex(nextSlide.imageIndexInProject)
-          }
+          // Derive active slide index from the *movement* progress (so it stays at 0 during hold).
+          const maxIndex = slides.length - 1
+          const nextIndex = Math.max(
+            0,
+            Math.min(maxIndex, Math.round(clampedMoveProgress * maxIndex))
+          )
+
+          if (nextIndex === lastSlideIndexRef.current) return
+          lastSlideIndexRef.current = nextIndex
+
+          const nextSlide = slides[nextIndex]
+          if (!nextSlide) return
+
+          setCurrentProjectTitle(nextSlide.projectTitle)
+          setCurrentProjectImageIndex(nextSlide.imageIndexInProject)
         }
       })
     }, sectionRef)
