@@ -83,27 +83,36 @@ function getFunFacts() {
 function getProjects() {
     return [
         {
-            title: 'Project 1',
+            title: 'Someday.com',
             images: [
-                '/projects_section/screen_shot1.png', 
-                '/projects_section/screen_shot2.png', 
-                '/projects_section/screen_shot3.png',
+                '/projects_section/someday-login.png', 
+                '/projects_section/someday-homepage.png', 
+                '/projects_section/someday-board.png',
+                '/projects_section/someday-chat.png',
+                '/projects_section/someday-kanban.png',
             ],
         },
         {
-            title: 'Project 2',
+            title: 'Sheba-Connect',
             images: [
-                '/projects_section/screen_shot4.png',
-                '/projects_section/screen_shot5.png',
+                '/projects_section/sheba-login.png',
+                '/projects_section/sheba-welcome.png',
+                '/projects_section/sheba-home.png',
+                '/projects_section/sheba-doctor.png',
+                '/projects_section/sheba-time.png',
+                '/projects_section/sheba-edit.png',
             ],
         },
         {
-            title: 'Project 3',
+            title: 'Nextep',
             images: [
-                '/projects_section/screen_shot6.png',
-                '/projects_section/screen_shot7.png',
-                '/projects_section/screen_shot8.png',
-                '/projects_section/screen_shot9.png',
+                '/projects_section/nextep-login.png',
+                '/projects_section/nextep-start.png',
+                '/projects_section/nextep-timeline1.png',
+                '/projects_section/nextep-mentor1.png',
+                '/projects_section/nextep-mentor2.png',
+                '/projects_section/nextep-timeline2.png',
+                '/projects_section/nextep-timeline3.png',
             ],
         },
     ]
