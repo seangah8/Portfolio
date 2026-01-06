@@ -10,6 +10,7 @@ export function ProjectsSection() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const slidesRef = useRef<HTMLDivElement | null>(null)
   const lastSlideIndexRef = useRef(0)
+  const lastProjectIndexRef = useRef(0)
   const scrollDirectionRef = useRef<1 | -1>(1)
   const outgoingTitleRef = useRef<HTMLSpanElement | null>(null)
   const incomingTitleRef = useRef<HTMLSpanElement | null>(null)
@@ -17,17 +18,18 @@ export function ProjectsSection() {
   const contentRef = useRef<HTMLDivElement | null>(null)
   const hasIntroPlayedRef = useRef(false)
 
-  const slides = useMemo(() => {
-    const projects = storageService.getProjects()
+  const projects = useMemo(() => storageService.getProjects(), [])
 
-    return projects.flatMap(project =>
+  const slides = useMemo(() => {
+    return projects.flatMap((project, projectIndex) =>
       project.images.filter(Boolean).map((src, imageIndexInProject) => ({
         src,
         projectTitle: project.title,
+        projectIndex,
         imageIndexInProject
       }))
     )
-  }, [])
+  }, [projects])
 
   const [currentProjectTitle, setCurrentProjectTitle] = useState(
     slides[0]?.projectTitle ?? ''
@@ -83,6 +85,25 @@ export function ProjectsSection() {
       const totalScrollPx = holdPx + (slides.length - 1) * pxPerImage
       const holdProgress = totalScrollPx > 0 ? holdPx / totalScrollPx : 0
 
+      // Background colors for the whole page (body), stepped per PROJECT.
+      // IMPORTANT: we do NOT set the body color on mount; we only change it when
+      // the Projects ScrollTrigger becomes active (enter / project-change).
+      const rootStyle = getComputedStyle(document.documentElement)
+      const background2 = rootStyle.getPropertyValue('--background2').trim() || '#27327e'
+      const background3 = rootStyle.getPropertyValue('--background3').trim() || '#36933f'
+      const maxProjectIndex = Math.max(0, projects.length - 1)
+      const getProjectColor = (projectIndex: number) => {
+        const t = maxProjectIndex > 0 ? projectIndex / maxProjectIndex : 0
+        return gsap.utils.interpolate(background2, background3, t)
+      }
+      const setBodyColorForProject = (projectIndex: number, duration = 0.35) => {
+        gsap.to(document.body, {
+          backgroundColor: getProjectColor(projectIndex),
+          duration,
+          ease: 'power2.inOut'
+        })
+      }
+
       // We drive this tween manually so we can add the initial "hold" distance.
       const slidesTween = gsap.to(slidesRef.current, {
         yPercent: -(slides.length - 1) * 100,
@@ -97,6 +118,15 @@ export function ProjectsSection() {
         pin: true,
         scrub: true,
         anticipatePin: 1,
+        onEnter: () => {
+          // When Projects becomes active, snap to the starting project color (background2).
+          setBodyColorForProject(0, 0)
+        },
+        onEnterBack: () => {
+          // When re-entering Projects from below, align the body to the current project color.
+          const idx = Math.max(0, Math.min(maxProjectIndex, lastProjectIndexRef.current))
+          setBodyColorForProject(idx, 0)
+        },
         onUpdate: self => {
           scrollDirectionRef.current = (self.direction || 1) as 1 | -1
 
@@ -120,6 +150,15 @@ export function ProjectsSection() {
 
           const nextSlide = slides[nextIndex]
           if (!nextSlide) return
+
+          // Step the background color only when the PROJECT changes (not per-pixel and not per slide).
+          // Project 0 => background2, last project => background3.
+          const nextProjectIndex = Math.max(0, Math.min(maxProjectIndex, nextSlide.projectIndex))
+
+          if (nextProjectIndex !== lastProjectIndexRef.current) {
+            lastProjectIndexRef.current = nextProjectIndex
+            setBodyColorForProject(nextProjectIndex, 0.35)
+          }
 
           setCurrentProjectTitle(nextSlide.projectTitle)
           setCurrentProjectImageIndex(nextSlide.imageIndexInProject)
