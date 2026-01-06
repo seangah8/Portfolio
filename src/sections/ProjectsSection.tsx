@@ -81,9 +81,16 @@ export function ProjectsSection() {
       })
 
       const pxPerImage = 400
-      const holdPx = pxPerImage // first "chunk" of scroll keeps image #1 fully visible
-      const totalScrollPx = holdPx + (slides.length - 1) * pxPerImage
-      const holdProgress = totalScrollPx > 0 ? holdPx / totalScrollPx : 0
+      // Make each slide "stick" (hold) for pxPerImage scroll, then transition to the next over pxPerImage scroll.
+      const holdPxPerSlide = pxPerImage / 2
+      const firstSlideHoldPx = 600
+      const transitionPxPerSlide = pxPerImage
+      const stepPx = holdPxPerSlide + transitionPxPerSlide
+      // Total scroll:
+      // - slide 0 holds for firstSlideHoldPx
+      // - for each step to the next slide: transition + hold of the new slide
+      const totalScrollPx =
+        firstSlideHoldPx + (slides.length - 1) * transitionPxPerSlide + (slides.length - 1) * holdPxPerSlide
 
       // Background colors for the whole page (body), stepped per PROJECT.
       // IMPORTANT: we do NOT set the body color on mount; we only change it when
@@ -130,20 +137,47 @@ export function ProjectsSection() {
         onUpdate: self => {
           scrollDirectionRef.current = (self.direction || 1) as 1 | -1
 
-          // Hold the first image for the first "holdProgress" chunk of scroll.
-          const raw = self.progress
-          const moveProgress =
-            raw <= holdProgress ? 0 : (raw - holdProgress) / Math.max(0.0001, 1 - holdProgress)
-          const clampedMoveProgress = Math.max(0, Math.min(1, moveProgress))
+          const maxIndex = slides.length - 1
+          if (maxIndex <= 0) return
 
+          // Convert scroll progress -> a "position" that includes holds:
+          // - slide 0 holds for firstSlideHoldPx
+          // - each next slide holds for holdPxPerSlide
+          // - each transition to the next slide takes transitionPxPerSlide
+          const scrollPx = self.progress * totalScrollPx
+
+          let position = 0 // 0..maxIndex (can be fractional during transitions)
+          if (scrollPx <= firstSlideHoldPx) {
+            position = 0
+          } else {
+            const remaining = scrollPx - firstSlideHoldPx
+            const maxSteps = maxIndex // number of transitions available (0->1 ... last-1->last)
+
+            // Each step is: transition (to i+1) + hold (of i+1)
+            const step = Math.floor(remaining / stepPx)
+
+            if (step >= maxSteps) {
+              // Past the last transition: we're holding on the last slide
+              position = maxIndex
+            } else {
+              const base = Math.max(0, Math.min(maxIndex - 1, step)) // we're transitioning from `base` to `base+1`
+              const within = remaining - base * stepPx
+
+              if (within <= transitionPxPerSlide) {
+                const t = within / Math.max(0.0001, transitionPxPerSlide)
+                position = base + Math.max(0, Math.min(1, t))
+              } else {
+                // Hold on slide base+1
+                position = Math.min(maxIndex, base + 1)
+              }
+            }
+          }
+
+          const clampedMoveProgress = Math.max(0, Math.min(1, position / maxIndex))
           slidesTween.progress(clampedMoveProgress)
 
-          // Derive active slide index from the *movement* progress (so it stays at 0 during hold).
-          const maxIndex = slides.length - 1
-          const nextIndex = Math.max(
-            0,
-            Math.min(maxIndex, Math.round(clampedMoveProgress * maxIndex))
-          )
+          // Update active slide index (changes near the middle of a transition).
+          const nextIndex = Math.max(0, Math.min(maxIndex, Math.round(position)))
 
           if (nextIndex === lastSlideIndexRef.current) return
           lastSlideIndexRef.current = nextIndex
