@@ -6,6 +6,10 @@ import { ProjectNotes, type ProjectNoteItem } from '../components/ProjectNotes'
 
 gsap.registerPlugin(ScrollTrigger)
 
+function formatLocalHHMM(date: Date) {
+  return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: false })
+}
+
 export function ProjectsSection() {
 
   const sectionRef = useRef<HTMLElement | null>(null)
@@ -44,7 +48,7 @@ export function ProjectsSection() {
     if (!first) return null
     const key = `${first.projectIndex}:${first.imageIndexInProject}`
     const text = projects[first.projectIndex]?.notes?.[first.imageIndexInProject] ?? null
-    return text ? { key, text } : null
+    return text ? { key, text, kind: 'note', time: formatLocalHHMM(new Date()) } : null
   }, [projects, slides])
 
   // Accumulating notes list (does NOT reset when project changes).
@@ -247,11 +251,12 @@ export function ProjectsSection() {
               setShownNotes(prev => [...prev, { key: typingKey, text: '', kind: 'typing' }])
 
               const timeoutId = window.setTimeout(() => {
+                const time = formatLocalHHMM(new Date())
                 setShownNotes(prev => {
                   const idx = prev.findIndex(n => n.key === typingKey)
                   if (idx === -1) return prev
                   const next = prev.slice()
-                  next[idx] = { key: noteKey, text: note, kind: 'note' }
+                  next[idx] = { key: noteKey, text: note, kind: 'note', time }
                   return next
                 })
                 setActiveNoteKey(prev => (prev === typingKey ? noteKey : prev))

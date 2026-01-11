@@ -4,6 +4,7 @@ export type ProjectNoteItem = {
     key: string
     text: string
     kind?: 'note' | 'typing'
+    time?: string
 }
 
 interface ProjectNotesProps {
@@ -61,7 +62,12 @@ export function ProjectNotes({ notes, activeKey }: ProjectNotesProps) {
                                 <span className="project-notes__typing-dot" />
                             </span>
                         ) : (
-                            note.text
+                            <>
+                                <span className="project-notes__text">{note.text}</span>
+                                <span className="project-notes__time" aria-hidden="true">
+                                    {note.time ?? '00:00'}
+                                </span>
+                            </>
                         )}
                     </li>
                 ))}
