@@ -39,6 +39,7 @@ export function ProjectNotes({ notes, activeKey }: ProjectNotesProps) {
                 {notes.map((note) => (
                     <li
                         key={note.key}
+                        className={note.key === activeKey ? 'project-notes__item project-notes__item--active' : 'project-notes__item'}
                         ref={(el) => {
                             if (el) liRefs.current.set(note.key, el)
                             else liRefs.current.delete(note.key)
