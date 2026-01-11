@@ -49,12 +49,20 @@ export function ProjectsSection() {
 
   // Accumulating notes list (does NOT reset when project changes).
   const seenNoteKeysRef = useRef<Set<string>>(new Set())
+  const pendingNoteTimeoutsRef = useRef<Map<string, number>>(new Map())
   const [shownNotes, setShownNotes] = useState<ProjectNoteItem[]>(() =>
     initialNote ? [initialNote] : []
   )
   const [activeNoteKey, setActiveNoteKey] = useState<string | null>(() =>
     initialNote ? initialNote.key : null
   )
+
+  useEffect(() => {
+    return () => {
+      pendingNoteTimeoutsRef.current.forEach(timeoutId => window.clearTimeout(timeoutId))
+      pendingNoteTimeoutsRef.current.clear()
+    }
+  }, [])
 
   useEffect(() => {
     if (!initialNote) return
@@ -230,8 +238,27 @@ export function ProjectsSection() {
               projects[nextSlide.projectIndex]?.notes?.[nextSlide.imageIndexInProject] ??
               null
             if (note) {
+              // Mark as seen immediately so fast scroll back/forward doesn't schedule duplicates.
               seenNoteKeysRef.current.add(noteKey)
-              setShownNotes(prev => [...prev, { key: noteKey, text: note }])
+
+              const typingKey = `${noteKey}__typing`
+              // While "typing" is shown, keep the rolling focus on the typing bubble.
+              setActiveNoteKey(typingKey)
+              setShownNotes(prev => [...prev, { key: typingKey, text: '', kind: 'typing' }])
+
+              const timeoutId = window.setTimeout(() => {
+                setShownNotes(prev => {
+                  const idx = prev.findIndex(n => n.key === typingKey)
+                  if (idx === -1) return prev
+                  const next = prev.slice()
+                  next[idx] = { key: noteKey, text: note, kind: 'note' }
+                  return next
+                })
+                setActiveNoteKey(prev => (prev === typingKey ? noteKey : prev))
+                pendingNoteTimeoutsRef.current.delete(noteKey)
+              }, 1000)
+
+              pendingNoteTimeoutsRef.current.set(noteKey, timeoutId)
             }
           }
         }

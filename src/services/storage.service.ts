@@ -130,7 +130,7 @@ function getProjects() {
                 '/projects_section/nextep-timeline3.png',
             ],
             notes: [
-                'nextep note1',
+                'nextep note1 nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1',
                 'nextep note2',
                 'nextep note3',
                 'nextep note4',

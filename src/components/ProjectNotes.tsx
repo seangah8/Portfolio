@@ -3,6 +3,7 @@ import { useLayoutEffect, useRef, useState } from 'react'
 export type ProjectNoteItem = {
     key: string
     text: string
+    kind?: 'note' | 'typing'
 }
 
 interface ProjectNotesProps {
@@ -39,13 +40,29 @@ export function ProjectNotes({ notes, activeKey }: ProjectNotesProps) {
                 {notes.map((note) => (
                     <li
                         key={note.key}
-                        className={note.key === activeKey ? 'project-notes__item project-notes__item--active' : 'project-notes__item'}
+                        className={[
+                            'project-notes__item',
+                            note.key === activeKey && note.kind !== 'typing'
+                                ? 'project-notes__item--active'
+                                : '',
+                            note.kind === 'typing' ? 'project-notes__item--typing' : '',
+                        ]
+                            .filter(Boolean)
+                            .join(' ')}
                         ref={(el) => {
                             if (el) liRefs.current.set(note.key, el)
                             else liRefs.current.delete(note.key)
                         }}
                     >
-                        {note.text}
+                        {note.kind === 'typing' ? (
+                            <span className="project-notes__typing" aria-label="Typing">
+                                <span className="project-notes__typing-dot" />
+                                <span className="project-notes__typing-dot" />
+                                <span className="project-notes__typing-dot" />
+                            </span>
+                        ) : (
+                            note.text
+                        )}
                     </li>
                 ))}
             </ul>
