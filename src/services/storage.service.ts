@@ -84,59 +84,35 @@ function getProjects() {
     return [
         {
             title: 'Someday.com',
-            images: [
-                '/projects_section/someday-login.png', 
-                '/projects_section/someday-homepage.png', 
-                '/projects_section/someday-board.png',
-                '/projects_section/someday-chat.png',
-                '/projects_section/someday-kanban.png',
-            ],
-            notes: [
-                'someday note1',
-                'someday note2',
-                'someday note3',
-                'someday note4',
-                'someday note5',
+            slides: [
+                { image: '/projects_section/someday-login.png', note: 'someday note1' },
+                { image: '/projects_section/someday-homepage.png', note: 'someday note2' },
+                { image: '/projects_section/someday-board.png', note: 'someday note3' },
+                { image: '/projects_section/someday-chat.png', note: 'someday note4' },
+                { image: '/projects_section/someday-kanban.png', note: 'someday note5' },
             ]
         },
         {
             title: 'Sheba-Connect',
-            images: [
-                '/projects_section/sheba-login.png',
-                '/projects_section/sheba-welcome.png',
-                '/projects_section/sheba-home.png',
-                '/projects_section/sheba-doctor.png',
-                '/projects_section/sheba-time.png',
-                '/projects_section/sheba-edit.png',
-            ],
-            notes: [
-                'sheba note1',
-                'sheba note2',
-                'sheba note3',
-                'sheba note4',
-                'sheba note5',
-                'sheba note6',
+            slides: [
+                { image: '/projects_section/sheba-login.png', note: 'sheba note1' },
+                { image: '/projects_section/sheba-welcome.png', note: 'sheba note2' },
+                { image: '/projects_section/sheba-home.png', note: 'sheba note3' },
+                { image: '/projects_section/sheba-doctor.png', note: 'sheba note4' },
+                { image: '/projects_section/sheba-time.png', note: 'sheba note5' },
+                { image: '/projects_section/sheba-edit.png', note: 'sheba note6' },
             ]
         },
         {
             title: 'Nextep',
-            images: [
-                '/projects_section/nextep-login.png',
-                '/projects_section/nextep-start.png',
-                '/projects_section/nextep-timeline1.png',
-                '/projects_section/nextep-mentor1.png',
-                '/projects_section/nextep-mentor2.png',
-                '/projects_section/nextep-timeline2.png',
-                '/projects_section/nextep-timeline3.png',
-            ],
-            notes: [
-                'nextep note1 nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1nextep note1',
-                'nextep note2',
-                'nextep note3',
-                'nextep note4',
-                'nextep note5',
-                'nextep note6',
-                'nextep note7',
+            slides: [
+                { image: '/projects_section/nextep-login.png', note: 'nextep note1' },
+                { image: '/projects_section/nextep-start.png', note: 'nextep note2' },
+                { image: '/projects_section/nextep-timeline1.png', note: 'nextep note3' },
+                { image: '/projects_section/nextep-mentor1.png', note: 'nextep note4' },
+                { image: '/projects_section/nextep-mentor2.png', note: 'nextep note5' },
+                { image: '/projects_section/nextep-timeline2.png', note: 'nextep note6' },
+                { image: '/projects_section/nextep-timeline3.png', note: 'nextep note7' },
             ]
         },
     ]

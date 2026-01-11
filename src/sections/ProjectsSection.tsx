@@ -27,11 +27,12 @@ export function ProjectsSection() {
 
   const slides = useMemo(() => {
     return projects.flatMap((project, projectIndex) =>
-      project.images.filter(Boolean).map((src, imageIndexInProject) => ({
-        src,
+      project.slides.filter(Boolean).map((slide, imageIndexInProject) => ({
+        src: slide.image,
         projectTitle: project.title,
         projectIndex,
-        imageIndexInProject
+        imageIndexInProject,
+        note: slide.note,
       }))
     )
   }, [projects])
@@ -47,7 +48,7 @@ export function ProjectsSection() {
     const first = slides[0]
     if (!first) return null
     const key = `${first.projectIndex}:${first.imageIndexInProject}`
-    const text = projects[first.projectIndex]?.notes?.[first.imageIndexInProject] ?? null
+    const text = first.note ?? null
     return text ? { key, text, kind: 'note', time: formatLocalHHMM(new Date()) } : null
   }, [projects, slides])
 
@@ -238,9 +239,7 @@ export function ProjectsSection() {
           const noteKey = `${nextSlide.projectIndex}:${nextSlide.imageIndexInProject}`
           setActiveNoteKey(noteKey)
           if (!seenNoteKeysRef.current.has(noteKey)) {
-            const note =
-              projects[nextSlide.projectIndex]?.notes?.[nextSlide.imageIndexInProject] ??
-              null
+            const note = nextSlide.note ?? null
             if (note) {
               // Mark as seen immediately so fast scroll back/forward doesn't schedule duplicates.
               seenNoteKeysRef.current.add(noteKey)
