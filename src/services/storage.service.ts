@@ -91,6 +91,13 @@ function getProjects() {
                 '/projects_section/someday-chat.png',
                 '/projects_section/someday-kanban.png',
             ],
+            notes: [
+                'someday note1',
+                'someday note2',
+                'someday note3',
+                'someday note4',
+                'someday note5',
+            ]
         },
         {
             title: 'Sheba-Connect',
@@ -102,6 +109,14 @@ function getProjects() {
                 '/projects_section/sheba-time.png',
                 '/projects_section/sheba-edit.png',
             ],
+            notes: [
+                'sheba note1',
+                'sheba note2',
+                'sheba note3',
+                'sheba note4',
+                'sheba note5',
+                'sheba note6',
+            ]
         },
         {
             title: 'Nextep',
@@ -114,6 +129,15 @@ function getProjects() {
                 '/projects_section/nextep-timeline2.png',
                 '/projects_section/nextep-timeline3.png',
             ],
+            notes: [
+                'nextep note1',
+                'nextep note2',
+                'nextep note3',
+                'nextep note4',
+                'nextep note5',
+                'nextep note6',
+                'nextep note7',
+            ]
         },
     ]
 }

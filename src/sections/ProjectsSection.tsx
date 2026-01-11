@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { storageService } from '../services/storage.service'
+import { ProjectNotes } from '../components/ProjectNotes'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -34,9 +35,17 @@ export function ProjectsSection() {
   const [currentProjectTitle, setCurrentProjectTitle] = useState(
     slides[0]?.projectTitle ?? ''
   )
+  const [currentProjectIndex, setCurrentProjectIndex] = useState(
+    slides[0]?.projectIndex ?? 0
+  )
   const [currentProjectImageIndex, setCurrentProjectImageIndex] = useState(
     slides[0]?.imageIndexInProject ?? 0
   )
+
+  const currentNotes = useMemo(() => {
+    const projectNotes = projects[currentProjectIndex]?.notes ?? []
+    return projectNotes.slice(0, currentProjectImageIndex + 1).filter(Boolean)
+  }, [projects, currentProjectImageIndex, currentProjectIndex])
 
   // We render these so we can animate old+new titles together.
   const [shownTitle, setShownTitle] = useState(slides[0]?.projectTitle ?? '')
@@ -195,6 +204,7 @@ export function ProjectsSection() {
           }
 
           setCurrentProjectTitle(nextSlide.projectTitle)
+          setCurrentProjectIndex(nextSlide.projectIndex)
           setCurrentProjectImageIndex(nextSlide.imageIndexInProject)
         }
       })
@@ -271,22 +281,31 @@ export function ProjectsSection() {
           </span>
         </div>
 
-        <div className="laptop">
-          <img className="laptop-frame" src="/projects_section/laptop.png" alt="laptop" />
-          <div
-            className="laptop-screen"
-            aria-label={`Project screenshots${currentProjectTitle ? ` - ${currentProjectTitle}` : ''}`}
-            data-project-title={currentProjectTitle}
-            data-project-image-index={currentProjectImageIndex}
+        <div className="projects-main">
+          <aside
+            className="projects-notes"
+            aria-label={`Project notes${currentProjectTitle ? ` - ${currentProjectTitle}` : ''}`}
           >
-            <div className="laptop-slides" ref={slidesRef}>
-              {slides.map((slide, idx) => (
-                <img
-                  key={`${slide.src}-${idx}`}
-                  src={slide.src}
-                  alt={`${slide.projectTitle} - screenshot ${slide.imageIndexInProject + 1}`}
-                />
-              ))}
+            <ProjectNotes notes={currentNotes} />
+          </aside>
+
+          <div className="laptop">
+            <img className="laptop-frame" src="/projects_section/laptop.png" alt="laptop" />
+            <div
+              className="laptop-screen"
+              aria-label={`Project screenshots${currentProjectTitle ? ` - ${currentProjectTitle}` : ''}`}
+              data-project-title={currentProjectTitle}
+              data-project-image-index={currentProjectImageIndex}
+            >
+              <div className="laptop-slides" ref={slidesRef}>
+                {slides.map((slide, idx) => (
+                  <img
+                    key={`${slide.src}-${idx}`}
+                    src={slide.src}
+                    alt={`${slide.projectTitle} - screenshot ${slide.imageIndexInProject + 1}`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
