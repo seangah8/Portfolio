@@ -35,17 +35,29 @@ export function ProjectsSection() {
   const [currentProjectTitle, setCurrentProjectTitle] = useState(
     slides[0]?.projectTitle ?? ''
   )
-  const [currentProjectIndex, setCurrentProjectIndex] = useState(
-    slides[0]?.projectIndex ?? 0
-  )
   const [currentProjectImageIndex, setCurrentProjectImageIndex] = useState(
     slides[0]?.imageIndexInProject ?? 0
   )
 
-  const currentNotes = useMemo(() => {
-    const projectNotes = projects[currentProjectIndex]?.notes ?? []
-    return projectNotes.slice(0, currentProjectImageIndex + 1).filter(Boolean)
-  }, [projects, currentProjectImageIndex, currentProjectIndex])
+  const initialNote = useMemo(() => {
+    const first = slides[0]
+    if (!first) return null
+    return projects[first.projectIndex]?.notes?.[first.imageIndexInProject] ?? null
+  }, [projects, slides])
+
+  // Accumulating notes list (does NOT reset when project changes).
+  const seenNoteKeysRef = useRef<Set<string>>(new Set())
+  const [shownNotes, setShownNotes] = useState<string[]>(() =>
+    initialNote ? [initialNote] : []
+  )
+
+  useEffect(() => {
+    if (!initialNote) return
+    // Ensure the first note is marked as "seen" so we don't add it again.
+    const first = slides[0]
+    if (!first) return
+    seenNoteKeysRef.current.add(`${first.projectIndex}:${first.imageIndexInProject}`)
+  }, [initialNote, slides])
 
   // We render these so we can animate old+new titles together.
   const [shownTitle, setShownTitle] = useState(slides[0]?.projectTitle ?? '')
@@ -204,8 +216,18 @@ export function ProjectsSection() {
           }
 
           setCurrentProjectTitle(nextSlide.projectTitle)
-          setCurrentProjectIndex(nextSlide.projectIndex)
           setCurrentProjectImageIndex(nextSlide.imageIndexInProject)
+
+          const noteKey = `${nextSlide.projectIndex}:${nextSlide.imageIndexInProject}`
+          if (!seenNoteKeysRef.current.has(noteKey)) {
+            const note =
+              projects[nextSlide.projectIndex]?.notes?.[nextSlide.imageIndexInProject] ??
+              null
+            if (note) {
+              seenNoteKeysRef.current.add(noteKey)
+              setShownNotes(prev => (prev.includes(note) ? prev : [...prev, note]))
+            }
+          }
         }
       })
     }, sectionRef)
@@ -286,7 +308,7 @@ export function ProjectsSection() {
             className="projects-notes"
             aria-label={`Project notes${currentProjectTitle ? ` - ${currentProjectTitle}` : ''}`}
           >
-            <ProjectNotes notes={currentNotes} />
+            <ProjectNotes notes={shownNotes} />
           </aside>
 
           <div className="laptop">
