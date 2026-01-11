@@ -70,18 +70,37 @@
                 transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
             }
 
-            li {
+            .project-notes__item {
+                position: relative;
                 padding: 0.75rem 1.5rem 0.75rem 1.5rem;
-                background-color: rgba(0, 0, 0, 0.5);
+                background-color: black;
                 border-radius: 15px;
                 font-family: "Montserrat", sans-serif;
                 font-size: 1rem;
                 line-height: 1.4;
+
+                // "Message bubble" corner triangle (right-angled) on top-left.
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 12px;
+                    width: 0;
+                    height: 0;
+                    border-top: 25px solid black;
+                    border-right: 30px solid transparent;
+                    transform-origin: top left;
+                    transform:  rotate(90deg);
+                }
             }
 
             .project-notes__item--active {
-                background-color: rgba(35, 92, 255, 0.75);
-                box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14) inset;
+                background-color: rgba(35, 92, 255, 1);
+                // box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14) inset;
+                
+                &::before {
+                    border-top-color: rgba(35, 92, 255, 1);
+                }
             }
         }
     }
