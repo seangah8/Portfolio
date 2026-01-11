@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { storageService } from '../services/storage.service'
-import { ProjectNotes } from '../components/ProjectNotes'
+import { ProjectNotes, type ProjectNoteItem } from '../components/ProjectNotes'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -39,16 +39,21 @@ export function ProjectsSection() {
     slides[0]?.imageIndexInProject ?? 0
   )
 
-  const initialNote = useMemo(() => {
+  const initialNote = useMemo<ProjectNoteItem | null>(() => {
     const first = slides[0]
     if (!first) return null
-    return projects[first.projectIndex]?.notes?.[first.imageIndexInProject] ?? null
+    const key = `${first.projectIndex}:${first.imageIndexInProject}`
+    const text = projects[first.projectIndex]?.notes?.[first.imageIndexInProject] ?? null
+    return text ? { key, text } : null
   }, [projects, slides])
 
   // Accumulating notes list (does NOT reset when project changes).
   const seenNoteKeysRef = useRef<Set<string>>(new Set())
-  const [shownNotes, setShownNotes] = useState<string[]>(() =>
+  const [shownNotes, setShownNotes] = useState<ProjectNoteItem[]>(() =>
     initialNote ? [initialNote] : []
+  )
+  const [activeNoteKey, setActiveNoteKey] = useState<string | null>(() =>
+    initialNote ? initialNote.key : null
   )
 
   useEffect(() => {
@@ -56,7 +61,7 @@ export function ProjectsSection() {
     // Ensure the first note is marked as "seen" so we don't add it again.
     const first = slides[0]
     if (!first) return
-    seenNoteKeysRef.current.add(`${first.projectIndex}:${first.imageIndexInProject}`)
+    seenNoteKeysRef.current.add(initialNote.key)
   }, [initialNote, slides])
 
   // We render these so we can animate old+new titles together.
@@ -219,13 +224,14 @@ export function ProjectsSection() {
           setCurrentProjectImageIndex(nextSlide.imageIndexInProject)
 
           const noteKey = `${nextSlide.projectIndex}:${nextSlide.imageIndexInProject}`
+          setActiveNoteKey(noteKey)
           if (!seenNoteKeysRef.current.has(noteKey)) {
             const note =
               projects[nextSlide.projectIndex]?.notes?.[nextSlide.imageIndexInProject] ??
               null
             if (note) {
               seenNoteKeysRef.current.add(noteKey)
-              setShownNotes(prev => (prev.includes(note) ? prev : [...prev, note]))
+              setShownNotes(prev => [...prev, { key: noteKey, text: note }])
             }
           }
         }
@@ -308,7 +314,7 @@ export function ProjectsSection() {
             className="projects-notes"
             aria-label={`Project notes${currentProjectTitle ? ` - ${currentProjectTitle}` : ''}`}
           >
-            <ProjectNotes notes={shownNotes} />
+            <ProjectNotes notes={shownNotes} activeKey={activeNoteKey} />
           </aside>
 
           <div className="laptop">

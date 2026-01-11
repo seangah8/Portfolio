@@ -42,20 +42,23 @@
     .projects-main {
         width: min(95vw, 85vw);
         display: flex;
-        align-items: start;
+        align-items: center;
         justify-content: space-between;
     }
 
     .projects-notes {
         width: 35vw;
         margin: 10vh 0 10vh 0;
-        max-height: 60vh;
-        overflow: auto;
+        height: 60vh;
+        overflow: hidden;
         padding: 1rem 1.1rem;
         border-radius: 12px;
         color: var(--main);
 
         .project-notes {
+            height: 100%;
+            overflow: hidden;
+
             ul {
                 margin: 0;
                 padding-left: 1.15rem;
@@ -63,6 +66,8 @@
                 flex-direction: column;
                 gap: 0.75rem;
                 list-style: none;
+                will-change: transform;
+                transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
             }
 
             li {
