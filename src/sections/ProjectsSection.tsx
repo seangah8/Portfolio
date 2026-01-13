@@ -37,12 +37,19 @@ export function ProjectsSection() {
     )
   }, [projects])
 
+  const [currentProjectIndex, setCurrentProjectIndex] = useState(() => slides[0]?.projectIndex ?? 0)
   const [currentProjectTitle, setCurrentProjectTitle] = useState(
     slides[0]?.projectTitle ?? ''
   )
   const [currentProjectImageIndex, setCurrentProjectImageIndex] = useState(
     slides[0]?.imageIndexInProject ?? 0
   )
+
+  const currentProjectUrl = projects[currentProjectIndex]?.url
+  const openCurrentProject = () => {
+    if (!currentProjectUrl) return
+    window.open(currentProjectUrl, '_blank', 'noopener,noreferrer')
+  }
 
   const initialNote = useMemo<ProjectNoteItem | null>(() => {
     const first = slides[0]
@@ -233,6 +240,7 @@ export function ProjectsSection() {
             setBodyColorForProject(nextProjectIndex, 0.35)
           }
 
+          setCurrentProjectIndex(nextProjectIndex)
           setCurrentProjectTitle(nextSlide.projectTitle)
           setCurrentProjectImageIndex(nextSlide.imageIndexInProject)
 
@@ -352,7 +360,16 @@ export function ProjectsSection() {
             <img className="laptop-frame" src="/projects_section/laptop.png" alt="laptop" />
             <div
               className="laptop-screen"
-              aria-label={`Project screenshots${currentProjectTitle ? ` - ${currentProjectTitle}` : ''}`}
+              role="link"
+              tabIndex={0}
+              onClick={openCurrentProject}
+              onKeyDown={ev => {
+                if (ev.key === 'Enter' || ev.key === ' ') {
+                  ev.preventDefault()
+                  openCurrentProject()
+                }
+              }}
+              aria-label={`Open project in new tab${currentProjectTitle ? ` - ${currentProjectTitle}` : ''}`}
               data-project-title={currentProjectTitle}
               data-project-image-index={currentProjectImageIndex}
             >
@@ -365,6 +382,9 @@ export function ProjectsSection() {
                   />
                 ))}
               </div>
+            </div>
+            <div className="click-signal">
+              <img src="/projects_section/click-sign.png" alt="click signal" />
             </div>
           </div>
         </div>

@@ -84,35 +84,91 @@ function getProjects() {
     return [
         {
             title: 'Someday.com',
+            url: 'https://someday-n1ze.onrender.com/',
             slides: [
-                { image: '/projects_section/someday-login.png', note: 'someday note1' },
-                { image: '/projects_section/someday-homepage.png', note: 'someday note2' },
-                { image: '/projects_section/someday-board.png', note: 'someday note3' },
-                { image: '/projects_section/someday-chat.png', note: 'someday note4' },
-                { image: '/projects_section/someday-kanban.png', note: 'someday note5' },
+                { 
+                    image: '/projects_section/someday-login.png', 
+                    note: 'SomeDay is a smart task-management web app inspired by Monday.com. It helps users organize tasks, plan ahead, and turn “someday” ideas into clear, actionable steps. This project was built as a full-stack team project, where I focused on creating a clean, intuitive user experience backed by a solid and scalable architecture.' 
+                },
+                { 
+                    image: '/projects_section/someday-homepage.png', 
+                    note: 'Users can organize multiple projects into clean, structured boards - similar to Monday.com📋 Each board keeps tasks and progress clearly separated, making it easy to manage teams and projects without clutter.' 
+                },
+                { 
+                    image: '/projects_section/someday-board.png', 
+                    note: 'Inside each board, tasks are managed in a clear table with priorities, statuses, assignees, and dates 🎯 Everything is visual and easy to scan, so teams can quickly see what’s critical, what’s done, and what needs attention next.' },
+                { 
+                    image: '/projects_section/someday-chat.png', 
+                    note: 'Each task has its own discussion panel, allowing team members to leave updates, reply, and stay in sync 💬 This keeps communication tied directly to the task, instead of getting lost in external chats.' 
+                },
+                { 
+                    image: '/projects_section/someday-kanban.png', 
+                    note: 'Boards can also switch to a Kanban view, letting users track tasks visually as they move between statuses 🧩 This makes progress easy to follow at a glance and helps teams stay focused on what’s next.' 
+                },
             ]
         },
         {
             title: 'Sheba-Connect',
+            url: 'https://sheba-connect.vercel.app/',
             slides: [
-                { image: '/projects_section/sheba-login.png', note: 'sheba note1' },
-                { image: '/projects_section/sheba-welcome.png', note: 'sheba note2' },
-                { image: '/projects_section/sheba-home.png', note: 'sheba note3' },
-                { image: '/projects_section/sheba-doctor.png', note: 'sheba note4' },
-                { image: '/projects_section/sheba-time.png', note: 'sheba note5' },
-                { image: '/projects_section/sheba-edit.png', note: 'sheba note6' },
+                { 
+                    image: '/projects_section/sheba-login.png', 
+                    note: 'Sheba Connect is a healthcare web platform that lets patients securely access medical services online 🏥 Built as a full-stack project, the app focuses on simple, secure login and a smooth patient experience, making it easy to connect users with healthcare systems without friction.' 
+                },
+                { 
+                    image: '/projects_section/sheba-welcome.png', 
+                    note: 'After logging in, a welcoming home page for patients, designed to make first-time users feel comfortable and oriented 🩺 From here, patients can quickly create appointments and choose the medical specialty they need, with a clear and friendly flow.' 
+                },
+                { 
+                    image: '/projects_section/sheba-doctor.png', 
+                    note: 'Patients can select a doctor from a curated list, with helpful options like favorites and earliest availability ⭐🕒 This step keeps the booking process simple while giving users control over who they meet and when.' 
+                },
+                { 
+                    image: '/projects_section/sheba-time.png', 
+                    note: 'Patients can pick an available date and time through a clear, step-by-step calendar view 🗓️ This makes scheduling appointments fast, intuitive, and stress-free.' 
+                },
+                { 
+                    image: '/projects_section/sheba-home.png', 
+                    note: 'At homepage, patients can view and manage all their appointments in one place, including upcoming and past visits 📅 This gives them a clear overview of their medical history and easy access to schedule new appointments when needed.' 
+                },
+                { 
+                    image: '/projects_section/sheba-edit.png', 
+                    note: 'Each appointment has a detailed view where patients can see all relevant information and manage changes easily 🧾 From here, they can reschedule, cancel, or join virtual appointments with just a click.' 
+                },
             ]
         },
         {
             title: 'Nextep',
+            url: 'https://nextepp.vercel.app/#/user',
             slides: [
-                { image: '/projects_section/nextep-login.png', note: 'nextep note1' },
-                { image: '/projects_section/nextep-start.png', note: 'nextep note2' },
-                { image: '/projects_section/nextep-timeline1.png', note: 'nextep note3' },
-                { image: '/projects_section/nextep-mentor1.png', note: 'nextep note4' },
-                { image: '/projects_section/nextep-mentor2.png', note: 'nextep note5' },
-                { image: '/projects_section/nextep-timeline2.png', note: 'nextep note6' },
-                { image: '/projects_section/nextep-timeline3.png', note: 'nextep note7' },
+                { 
+                    image: '/projects_section/nextep-login.png', 
+                    note: 'Nextep is an AI-powered personal development app designed to help users turn long-term goals into clear, actionable paths 🚀 Built as a full-stack project, it combines a clean, focused interface with smart AI guidance to help users plan, track progress, and stay motivated over time.' 
+                },
+                { 
+                    image: '/projects_section/nextep-start.png', 
+                    note: 'Nextep starts by asking users to define their goal - including a clear title, description, and the time they want to give themselves to achieve it 🎯 This helps turn a vague idea into a concrete, time-bound objective from the very first step.' 
+                },
+                { 
+                    image: '/projects_section/nextep-timeline1.png', 
+                    note: 'Goals are visualized as a circular timeline, working like a stopwatch that represents the full time span ⏱️ An arrow shows the user’s current progress, and hovering over each step reveals detailed information about that stage, making long-term goals feel structured and trackable.' 
+                },
+                { 
+                    image: '/projects_section/nextep-mentor1.png', 
+                    note: 'Clicking the center of the timeline reveals an AI mentor that helps users plan how to achieve a specific step 🤖 It starts by asking a few key questions, such as how much time the user can invest, their current experience level, and other details needed to build a personalized path.' 
+                },
+                { 
+                    image: '/projects_section/nextep-mentor2.png', 
+                    note: 'After answering the mentor’s questions, Nextep generates several possible paths the user can choose from 🤖 Each path includes a clear summary and a step-by-step schedule, helping users pick the approach that fits them best and move forward with confidence.' 
+                },
+                { 
+                    image: '/projects_section/nextep-timeline2.png', 
+                    note: 'Once a path is selected, the timeline is automatically filled with concrete steps across the full time span 🧩 Users can edit each step, as well as add or remove steps manually, giving them full control over how their plan evolves.' 
+                },
+                { 
+                    image: '/projects_section/nextep-timeline3.png', 
+                    note: 'And for each of those steps, the user can create paths manually or with the AI mentor 🤖 This helps keep the journey organized and smooth, allowing big goals to be broken down into smaller, manageable milestones whenever needed.' 
+                },
             ]
         },
     ]
