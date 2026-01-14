@@ -11,6 +11,7 @@
     --contact-spotlight-x: 50%;
     --contact-spotlight-y: 50%;
     --contact-spotlight-opacity: 0;
+    --contact-spotlight-size: 640px;
 
     &::before {
         content: "";
@@ -20,7 +21,7 @@
         opacity: var(--contact-spotlight-opacity);
         transition: opacity 180ms ease;
         background: radial-gradient(
-            circle 640px at var(--contact-spotlight-x) var(--contact-spotlight-y),
+            circle var(--contact-spotlight-size) at var(--contact-spotlight-x) var(--contact-spotlight-y),
             rgba(255, 255, 255, 0.9) 0%,
             rgba(255, 255, 255, 0) 70%
         );
@@ -29,6 +30,7 @@
     }
 
     h1 {
+        cursor: pointer;
         position: relative;
         z-index: 1;
         width: 1000px;
@@ -40,5 +42,10 @@
         --contact-shadow-y: 0px;
         text-shadow: var(--contact-shadow-x) var(--contact-shadow-y) 18px rgba(0, 0, 0, 0.35);
         will-change: text-shadow;
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: scale(1.05);
+        }
     }
 }

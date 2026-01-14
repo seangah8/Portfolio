@@ -8,6 +8,7 @@ export function ContactSection() {
     const sectionRef = useRef<HTMLElement | null>(null)
     const titleRef = useRef<HTMLHeadingElement | null>(null)
     const rafRef = useRef<number | null>(null)
+    const phaseRef = useRef<'idle' | 'animating' | 'done'>('idle')
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -16,11 +17,16 @@ export function ContactSection() {
             const rootStyle = getComputedStyle(document.documentElement)
             const background3 = rootStyle.getPropertyValue('--background3').trim() || '#1b8775'
             const background4 = rootStyle.getPropertyValue('--background4').trim() || '#ffffff'
+            const background5 = rootStyle.getPropertyValue('--background5').trim() || '#ffffff'
             const mainText = rootStyle.getPropertyValue('--main').trim() || '#ffffff'
 
             const setContactMode = (isContact: boolean) => {
                 gsap.to(document.body, {
-                    backgroundColor: isContact ? background4 : background3,
+                    backgroundColor: isContact
+                        ? phaseRef.current === 'done'
+                            ? background5
+                            : background4
+                        : background3,
                     duration: 0.35,
                     ease: 'power2.inOut',
                 })
@@ -76,6 +82,8 @@ export function ContactSection() {
     }
 
     const handleMouseMove: React.MouseEventHandler<HTMLElement> = ev => {
+        if (phaseRef.current === 'done') return
+
         const titleEl = titleRef.current
         const sectionEl = sectionRef.current
         if (!titleEl || !sectionEl) return
@@ -83,6 +91,8 @@ export function ContactSection() {
         // Throttle to animation frames so we don't spam style recalcs.
         if (rafRef.current) window.cancelAnimationFrame(rafRef.current)
         rafRef.current = window.requestAnimationFrame(() => {
+            if (!titleRef.current || !sectionRef.current) return
+
             // Spotlight position (relative to the section)
             const sectionRect = sectionEl.getBoundingClientRect()
             const sx = ev.clientX - sectionRect.left
@@ -113,7 +123,75 @@ export function ContactSection() {
             rafRef.current = null
         }
         setTitleShadow(0, 0)
-        setSpotlight(0, 0, 0)
+        if (phaseRef.current !== 'animating') setSpotlight(0, 0, 0)
+    }
+
+    const handleTitleClick: React.MouseEventHandler<HTMLHeadingElement> = () => {
+        if (phaseRef.current !== 'idle') return
+
+        const sectionEl = sectionRef.current
+        const titleEl = titleRef.current
+        if (!sectionEl || !titleEl) return
+
+        phaseRef.current = 'animating'
+
+        const rootStyle = getComputedStyle(document.documentElement)
+        const background5 = rootStyle.getPropertyValue('--background5').trim() || '#ffffff'
+
+        // Ensure spotlight is visible (even if the user hasn't moved the mouse yet).
+        sectionEl.style.setProperty('--contact-spotlight-opacity', '1')
+
+        // Center spotlight on the title at the moment of click.
+        const sectionRect = sectionEl.getBoundingClientRect()
+        const titleRect = titleEl.getBoundingClientRect()
+        const cx = titleRect.left + titleRect.width / 2 - sectionRect.left
+        const cy = titleRect.top + titleRect.height / 2 - sectionRect.top
+        setSpotlight(cx, cy, 1)
+
+        const tl = gsap.timeline({
+            defaults: { ease: 'power2.inOut' },
+            onComplete: () => {
+                phaseRef.current = 'done'
+            },
+        })
+
+        tl.to(
+            titleEl,
+            {
+                opacity: 0,
+                duration: 0.35,
+                pointerEvents: 'none',
+            },
+            0
+        )
+            .set(titleEl, { display: 'none' })
+            .to(
+                sectionEl,
+                {
+                    '--contact-spotlight-size': '8000px',
+                    duration: 0.5,
+                    ease: 'power2.out',
+                } as gsap.TweenVars,
+                0
+            )
+            .to(
+                document.body,
+                {
+                    backgroundColor: background5,
+                    duration: 0.35,
+                    ease: 'power2.inOut',
+                },
+                '>'
+            )
+            .to(
+                sectionEl,
+                {
+                    '--contact-spotlight-opacity': 0,
+                    duration: 0.25,
+                    ease: 'power2.out',
+                } as gsap.TweenVars,
+                '>'
+            )
     }
 
     return (
@@ -123,7 +201,9 @@ export function ContactSection() {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >
-            <h1 ref={titleRef}>Want to make your dream website come true?</h1>
+            <h1 ref={titleRef} onClick={handleTitleClick}>
+                Want to make your dream website come true?
+            </h1>
         </section>
     )
 }
