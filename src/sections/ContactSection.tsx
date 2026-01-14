@@ -9,6 +9,7 @@ export function ContactSection() {
     const contacts = useMemo(() => storageService.getContact(), [])
     const [showContacts, setShowContacts] = useState(false)
     const [contactsInteractive, setContactsInteractive] = useState(false)
+    const [headline, setHeadline] = useState('Want to make your dream website come true?')
 
     const sectionRef = useRef<HTMLElement | null>(null)
     const titleRef = useRef<HTMLHeadingElement | null>(null)
@@ -240,7 +241,6 @@ export function ContactSection() {
             },
             0
         )
-            .set(titleEl, { display: 'none' })
             .to(
                 sectionEl,
                 {
@@ -268,9 +268,13 @@ export function ContactSection() {
                 } as gsap.TweenVars,
                 '>'
             )
-            .call(() => {
-                setShowContacts(true)
-            })
+            // After background becomes background5, show a new title in the same place.
+            .call(() => setHeadline('Than lets stay in touch'))
+            .set(titleEl, { opacity: 0 , textShadow: '0 0 10px rgba(0, 0, 0, 0.0)'})
+            .to(titleEl, { opacity: 1, duration: 0.4, ease: 'power2.out'})
+            // Wait a bit, then start the contact lines which will cover the title.
+            .to({}, { duration: 0.5 })
+            .call(() => setShowContacts(true))
     }
 
     const openContact = (url: string | undefined) => {
@@ -286,7 +290,7 @@ export function ContactSection() {
             onMouseLeave={handleMouseLeave}
         >
             <h1 ref={titleRef} onClick={handleTitleClick}>
-                Want to make your dream website come true?
+                {headline}
             </h1>
 
             {showContacts && (
