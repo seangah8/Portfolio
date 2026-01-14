@@ -181,9 +181,9 @@ function getContact() {
 
     return (
         [
-            {title: 'LinkedIn', icon: 'fa-brands fa-linkedin', color1: '#4d98e3', color2: '#0B66C3'},
-            {title: 'Gmail', icon: 'fa-solid fa-envelope', color1: '#ff776b', color2: '#EA4335'},
-            {title: 'GitHub', icon: 'fa-brands fa-github',   color1: '#3d4a5c', color2: '#151B23'},
+            {title: 'LinkedIn', icon: 'fa-brands fa-linkedin', color1: '#4d98e3', color2: '#0B66C3', url: 'https://www.linkedin.com/in/sean-gah-712794308/'},
+            {title: 'Gmail', icon: 'fa-solid fa-envelope', color1: '#ff776b', color2: '#EA4335', url: 'https://mail.google.com/mail/?view=cm&fs=1&to=seangah8@gmail.com'},
+            {title: 'GitHub', icon: 'fa-brands fa-github',   color1: '#3d4a5c', color2: '#151B23', url: 'https://github.com/seangah8'},
         ]
     )
         

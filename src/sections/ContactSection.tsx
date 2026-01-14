@@ -273,6 +273,11 @@ export function ContactSection() {
             })
     }
 
+    const openContact = (url: string | undefined) => {
+        if (!url) return
+        window.open(url, '_blank', 'noopener,noreferrer')
+    }
+
     return (
         <section
             className="contact-section"
@@ -301,6 +306,20 @@ export function ContactSection() {
                             }
                             ref={el => {
                                 contactLineRefs.current[index] = el
+                            }}
+                            role={contactsInteractive ? 'link' : undefined}
+                            tabIndex={contactsInteractive ? 0 : -1}
+                            aria-label={contactsInteractive ? `Open ${contact.title}` : undefined}
+                            onClick={() => {
+                                if (!contactsInteractive) return
+                                openContact(contact.url)
+                            }}
+                            onKeyDown={ev => {
+                                if (!contactsInteractive) return
+                                if (ev.key === 'Enter' || ev.key === ' ') {
+                                    ev.preventDefault()
+                                    openContact(contact.url)
+                                }
                             }}
                         >
                             <div className="contact-line__content">

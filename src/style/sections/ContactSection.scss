@@ -125,8 +125,11 @@
     }
 
     // Hover interactions are enabled only after the reveal animations complete.
-    .contact-lines--interactive .contact-line:hover::before {
+    .contact-lines--interactive .contact-line {
         cursor: pointer;
+    }
+
+    .contact-lines--interactive .contact-line:hover::before {
         background-color: var(--line-color2);
     }
 
