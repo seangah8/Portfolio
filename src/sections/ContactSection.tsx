@@ -7,6 +7,7 @@ gsap.registerPlugin(ScrollTrigger)
 export function ContactSection() {
     const sectionRef = useRef<HTMLElement | null>(null)
     const titleRef = useRef<HTMLHeadingElement | null>(null)
+    const rafRef = useRef<number | null>(null)
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -31,6 +32,12 @@ export function ContactSection() {
                         ease: 'power2.inOut',
                     })
                 }
+
+                // If we leave the section via scroll (without a mouseleave),
+                // fade out the spotlight overlay.
+                if (!isContact && sectionRef.current) {
+                    sectionRef.current.style.setProperty('--contact-spotlight-opacity', '0')
+                }
             }
 
             ScrollTrigger.create({
@@ -54,9 +61,69 @@ export function ContactSection() {
         return () => ctx.revert()
     }, [])
 
+    const setTitleShadow = (x: number, y: number) => {
+        if (!titleRef.current) return
+        titleRef.current.style.setProperty('--contact-shadow-x', `${x.toFixed(1)}px`)
+        titleRef.current.style.setProperty('--contact-shadow-y', `${y.toFixed(1)}px`)
+    }
+
+    const setSpotlight = (x: number, y: number, opacity: number) => {
+        const sectionEl = sectionRef.current
+        if (!sectionEl) return
+        sectionEl.style.setProperty('--contact-spotlight-x', `${x.toFixed(1)}px`)
+        sectionEl.style.setProperty('--contact-spotlight-y', `${y.toFixed(1)}px`)
+        sectionEl.style.setProperty('--contact-spotlight-opacity', `${opacity}`)
+    }
+
+    const handleMouseMove: React.MouseEventHandler<HTMLElement> = ev => {
+        const titleEl = titleRef.current
+        const sectionEl = sectionRef.current
+        if (!titleEl || !sectionEl) return
+
+        // Throttle to animation frames so we don't spam style recalcs.
+        if (rafRef.current) window.cancelAnimationFrame(rafRef.current)
+        rafRef.current = window.requestAnimationFrame(() => {
+            // Spotlight position (relative to the section)
+            const sectionRect = sectionEl.getBoundingClientRect()
+            const sx = ev.clientX - sectionRect.left
+            const sy = ev.clientY - sectionRect.top
+            setSpotlight(sx, sy, 1)
+
+            // Shadow offset (relative to the title)
+            const rect = titleEl.getBoundingClientRect()
+            const cx = rect.left + rect.width / 2
+            const cy = rect.top + rect.height / 2
+
+            const dx = ev.clientX - cx
+            const dy = ev.clientY - cy
+
+            // Opposite direction of the mouse:
+            // mouse left  -> shadow right (positive x)
+            // mouse right -> shadow left  (negative x)
+            const max = 100
+            const ox = Math.max(-max, Math.min(max, -dx / 12))
+            const oy = Math.max(-max, Math.min(max, -dy / 12))
+            setTitleShadow(ox, oy)
+        })
+    }
+
+    const handleMouseLeave: React.MouseEventHandler<HTMLElement> = () => {
+        if (rafRef.current) {
+            window.cancelAnimationFrame(rafRef.current)
+            rafRef.current = null
+        }
+        setTitleShadow(0, 0)
+        setSpotlight(0, 0, 0)
+    }
+
     return (
-        <section className="contact-section" ref={sectionRef}>
-            <h1 ref={titleRef}>want to make your dream website come true?</h1>
+        <section
+            className="contact-section"
+            ref={sectionRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+        >
+            <h1 ref={titleRef}>Want to make your dream website come true?</h1>
         </section>
     )
 }

@@ -1,15 +1,44 @@
 .contact-section {
     height: 100vh;
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
+    // Mouse "spotlight" overlay (brighter around the cursor)
+    --contact-spotlight-x: 50%;
+    --contact-spotlight-y: 50%;
+    --contact-spotlight-opacity: 0;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: var(--contact-spotlight-opacity);
+        transition: opacity 180ms ease;
+        background: radial-gradient(
+            circle 640px at var(--contact-spotlight-x) var(--contact-spotlight-y),
+            rgba(255, 255, 255, 0.9) 0%,
+            rgba(255, 255, 255, 0) 70%
+        );
+        mix-blend-mode: screen;
+        z-index: 0;
+    }
+
     h1 {
+        position: relative;
+        z-index: 1;
         width: 1000px;
         text-align: center;
         font-size: 4rem;
         font-weight: 700;
         color: var(--main);
+        --contact-shadow-x: 0px;
+        --contact-shadow-y: 0px;
+        text-shadow: var(--contact-shadow-x) var(--contact-shadow-y) 18px rgba(0, 0, 0, 0.35);
+        will-change: text-shadow;
     }
 }
