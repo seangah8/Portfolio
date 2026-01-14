@@ -11,7 +11,7 @@
     --contact-spotlight-x: 50%;
     --contact-spotlight-y: 50%;
     --contact-spotlight-opacity: 0;
-    --contact-spotlight-size: 640px;
+    --contact-spotlight-size: 2000px;
 
     &::before {
         content: "";
@@ -45,7 +45,97 @@
         transition: transform 0.3s ease;
 
         &:hover {
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
+    }
+
+    .contact-lines {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 2;
+        pointer-events: none; // enabled only after animations finish
+    }
+
+    .contact-lines--interactive {
+        pointer-events: auto;
+    }
+
+    .contact-line {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0 6vw;
+        will-change: transform;
+        overflow: visible;
+        position: relative;
+        --line-color1: #000;
+        --line-color2: #000;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-color: var(--line-color1);
+            z-index: 0;
+            transform-origin: center;
+            transition: background-color 220ms ease, transform 220ms ease;
+        }
+    }
+
+    .contact-line--from-right {
+        justify-content: flex-end;
+    }
+
+    .contact-line__content {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        position: relative;
+        z-index: 1;
+        transform-origin: center;
+        transition: transform 220ms ease;
+    }
+
+    // For right-entering lines, keep content anchored to the right edge.
+    // Icon should be the outer-most element (far right), then the title.
+    .contact-line--from-right .contact-line__content {
+        flex-direction: row-reverse;
+    }
+
+    .contact-line__icon {
+        font-size: clamp(2rem, 4.5vw, 3.5rem);
+        color: #fff;
+        text-shadow: 0 6px 30px rgba(0, 0, 0, 0.35);
+        will-change: transform, opacity;
+    }
+
+    .contact-line__title {
+        font-family: "Montserrat", sans-serif;
+        font-size: clamp(1.5rem, 4vw, 3rem);
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        color: #fff;
+        text-shadow: 0 6px 30px rgba(0, 0, 0, 0.35);
+        user-select: none;
+        will-change: transform, opacity;
+        transition: transform 220ms ease;
+    }
+
+    // Hover interactions are enabled only after the reveal animations complete.
+    .contact-lines--interactive .contact-line:hover::before {
+        cursor: pointer;
+        background-color: var(--line-color2);
+    }
+
+    // Shift title away from the icon, based on which side the line is anchored to.
+    .contact-lines--interactive .contact-line--from-left:hover .contact-line__title {
+        transform: translateX(30%);
+    }
+
+    .contact-lines--interactive .contact-line--from-right:hover .contact-line__title {
+        transform: translateX(-50%);
     }
 }

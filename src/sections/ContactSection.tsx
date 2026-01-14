@@ -1,14 +1,23 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { storageService } from '../services/storage.service'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function ContactSection() {
+    const contacts = useMemo(() => storageService.getContact(), [])
+    const [showContacts, setShowContacts] = useState(false)
+    const [contactsInteractive, setContactsInteractive] = useState(false)
+
     const sectionRef = useRef<HTMLElement | null>(null)
     const titleRef = useRef<HTMLHeadingElement | null>(null)
     const rafRef = useRef<number | null>(null)
     const phaseRef = useRef<'idle' | 'animating' | 'done'>('idle')
+    const hasAnimatedContactsRef = useRef(false)
+    const contactLineRefs = useRef<(HTMLDivElement | null)[]>([])
+    const contactIconRefs = useRef<(HTMLElement | null)[]>([])
+    const contactTitleRefs = useRef<(HTMLSpanElement | null)[]>([])
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -66,6 +75,73 @@ export function ContactSection() {
 
         return () => ctx.revert()
     }, [])
+
+    useEffect(() => {
+        if (!showContacts) return
+        if (hasAnimatedContactsRef.current) return
+
+        const els = contactLineRefs.current.filter(Boolean) as HTMLDivElement[]
+        if (!els.length) return
+
+        hasAnimatedContactsRef.current = true
+        setContactsInteractive(false)
+
+        const icons = contactIconRefs.current.slice(0, els.length)
+        const titles = contactTitleRefs.current.slice(0, els.length)
+
+        const lineDuration = 1.5
+        const lineStagger = 0.5
+        const iconDuration = 0.3
+        const titleDuration = 0.3
+
+        gsap.set(els, { opacity: 1 })
+        gsap.set(icons, { opacity: 0 })
+        gsap.set(titles, { opacity: 0 })
+
+        const tl = gsap.timeline()
+
+        els.forEach((lineEl, i) => {
+            const fromLeft = i % 2 === 0
+            const lineStart = i * lineStagger
+            const contentStart = lineStart + lineDuration
+            const enterX = fromLeft ? -24 : 24
+
+            tl.fromTo(
+                lineEl,
+                { xPercent: fromLeft ? -110 : 110 },
+                { xPercent: 0, duration: lineDuration, ease: 'power3.out' },
+                lineStart
+            )
+
+            const iconEl = icons[i]
+            const titleEl = titles[i]
+
+            if (iconEl) {
+                tl.fromTo(
+                    iconEl,
+                    { opacity: 0, x: enterX },
+                    { opacity: 1, x: 0, duration: iconDuration, ease: 'power2.out' },
+                    contentStart
+                )
+                // Allow CSS hover transforms later (remove inline transform once revealed).
+                tl.set(iconEl, { clearProps: 'transform' }, contentStart + iconDuration)
+            }
+
+            if (titleEl) {
+                tl.fromTo(
+                    titleEl,
+                    { opacity: 0, x: enterX },
+                    { opacity: 1, x: 0, duration: titleDuration, ease: 'power2.out' },
+                    contentStart + iconDuration * 0.85
+                )
+                tl.set(titleEl, { clearProps: 'transform' }, contentStart + iconDuration * 0.85 + titleDuration)
+            }
+        })
+
+        tl.eventCallback('onComplete', () => {
+            setContactsInteractive(true)
+        })
+    }, [showContacts])
 
     const setTitleShadow = (x: number, y: number) => {
         if (!titleRef.current) return
@@ -192,6 +268,9 @@ export function ContactSection() {
                 } as gsap.TweenVars,
                 '>'
             )
+            .call(() => {
+                setShowContacts(true)
+            })
     }
 
     return (
@@ -204,6 +283,47 @@ export function ContactSection() {
             <h1 ref={titleRef} onClick={handleTitleClick}>
                 Want to make your dream website come true?
             </h1>
+
+            {showContacts && (
+                <div className={'contact-lines' + (contactsInteractive ? ' contact-lines--interactive' : '')}>
+                    {contacts.map((contact, index) => (
+                        <div
+                            key={contact.title}
+                            className={
+                                'contact-line ' +
+                                (index % 2 === 0 ? 'contact-line--from-left' : 'contact-line--from-right')
+                            }
+                            style={
+                                {
+                                    ['--line-color1' as any]: contact.color1,
+                                    ['--line-color2' as any]: contact.color2,
+                                } as CSSProperties
+                            }
+                            ref={el => {
+                                contactLineRefs.current[index] = el
+                            }}
+                        >
+                            <div className="contact-line__content">
+                                <i
+                                    className={`contact-line__icon ${contact.icon}`}
+                                    aria-hidden="true"
+                                    ref={el => {
+                                        contactIconRefs.current[index] = el
+                                    }}
+                                />
+                                <span
+                                    className="contact-line__title"
+                                    ref={el => {
+                                        contactTitleRefs.current[index] = el
+                                    }}
+                                >
+                                    {contact.title}
+                                </span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </section>
     )
 }
