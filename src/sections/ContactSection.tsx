@@ -269,7 +269,7 @@ export function ContactSection() {
                 '>'
             )
             // After background becomes background5, show a new title in the same place.
-            .call(() => setHeadline('Than lets stay in touch'))
+            .call(() => setHeadline('Then lets stay in touch'))
             .set(titleEl, { opacity: 0 , textShadow: '0 0 10px rgba(0, 0, 0, 0.0)'})
             .to(titleEl, { opacity: 1, duration: 0.4, ease: 'power2.out'})
             // Wait a bit, then start the contact lines which will cover the title.
