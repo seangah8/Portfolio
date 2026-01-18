@@ -1,0 +1,8 @@
+html {
+    scroll-behavior: smooth;
+}
+
+.app-section {
+    // Keep this small; JS scroll offset accounts for the actual navbar height.
+    scroll-margin-top: 8px;
+}

@@ -9,10 +9,18 @@ export default function App() {
   return (
     <>
       <NavigationBar />
-      <HeadlineSection />
-      <AboutSection />
-      <ProjectsSection />
-      <ContactSection />
+      <section id="welcome" className="app-section">
+        <HeadlineSection />
+      </section>
+      <section id="about" className="app-section">
+        <AboutSection />
+      </section>
+      <section id="projects" className="app-section">
+        <ProjectsSection />
+      </section>
+      <section id="contact" className="app-section">
+        <ContactSection />
+      </section>
     </>
   )
 }
