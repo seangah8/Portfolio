@@ -5,6 +5,7 @@
 @use './sections/ProjectsSection';
 @use './sections/ContactSection';
 @use './components/AboutInfo';
+@use './components/NavigationBar';
 
 body {
     overflow-x: hidden;

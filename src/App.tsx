@@ -2,11 +2,13 @@ import { HeadlineSection } from './sections/HeadlineSection'
 import { AboutSection } from './sections/AboutSection'
 import { ProjectsSection } from './sections/ProjectsSection'
 import { ContactSection } from './sections/ContactSection'
+import { NavigationBar } from './components/NavigationBar'
 export default function App() {
 
 
   return (
     <>
+      <NavigationBar />
       <HeadlineSection />
       <AboutSection />
       <ProjectsSection />
@@ -19,11 +21,9 @@ export default function App() {
 
 /*
   TODO:
-    1. create a new section for the contact me section
-    2. create a title in the middle of the section with a quastion like "want to make your dream website come true?"
-    4. make the background color change when entering the section
-    4. when clicking the title it will fade
-    5. affter fading, 3 color horisontal lines will come from left, right and left again and in each a bouncy animation will show the media logo
-    6. hovering each line will show the media name and the link to the media
-    7. clicking it will open the media in a new tab
+    1. create navigation bar at the top of the page with the sections
+    2. when clicking a section, the page will scroll to the start of the section
+    3. add a small toggal arrow button to the navigation bar to close/open the navigation bar
+    4. when picking section from the bar, the navigation bar will close
+    5. at start, the navigation bar will be open, exiting headline section will close it automatically
 */
