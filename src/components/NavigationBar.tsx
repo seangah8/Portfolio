@@ -31,7 +31,10 @@ export function NavigationBar() {
                     key={section.id}
                     className="navigation-bar__item"
                     type="button"
-                    onClick={() => scrollToSection(section.id)}
+                    onClick={() => {
+                        scrollToSection(section.id)
+                        setIsOpen(false)
+                    }}
                     tabIndex={isOpen ? 0 : -1}
                 >
                     {section.label}
