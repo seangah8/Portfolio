@@ -6,7 +6,11 @@ import Typewriter from 'typewriter-effect'
 
 const subtitleText = 'Sean Gah - Full Stack Developer'
 
-export function HeadlineSection() {
+type HeadlineSectionProps = {
+  onIntroComplete?: () => void
+}
+
+export function HeadlineSection({ onIntroComplete }: HeadlineSectionProps) {
   const sectionRef = useRef<HTMLElement | null>(null)
   const leftBracketRef = useRef<HTMLSpanElement | null>(null)
   const letterSRef = useRef<HTMLSpanElement | null>(null)
@@ -15,6 +19,11 @@ export function HeadlineSection() {
   const slashRef = useRef<HTMLSpanElement | null>(null)
   const typewriterRef = useRef<any | null>(null)
   const typewriterContainerRef = useRef<HTMLSpanElement | null>(null)
+  const onIntroCompleteRef = useRef<HeadlineSectionProps['onIntroComplete']>(onIntroComplete)
+
+  useEffect(() => {
+    onIntroCompleteRef.current = onIntroComplete
+  }, [onIntroComplete])
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -139,6 +148,8 @@ export function HeadlineSection() {
         if (typewriterRef.current) {
           typewriterRef.current.typeString(subtitleText).start()
         }
+
+        onIntroCompleteRef.current?.()
       })
     }, sectionRef)
 

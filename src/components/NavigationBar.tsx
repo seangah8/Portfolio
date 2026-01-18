@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 
 const SECTIONS = [
     { id: 'welcome', label: 'Welcome' },
@@ -7,9 +7,12 @@ const SECTIONS = [
     { id: 'contact', label: 'Contact' },
 ] as const
 
-export function NavigationBar() {
-    const navRef = useRef<HTMLElement | null>(null)
-    const [isOpen, setIsOpen] = useState(true)
+type NavigationBarProps = {
+    isOpen: boolean
+    setIsOpen: Dispatch<SetStateAction<boolean>>
+}
+
+export function NavigationBar({ isOpen, setIsOpen }: NavigationBarProps) {
 
     function scrollToSection(id: string) {
         const el = document.getElementById(id)
@@ -22,7 +25,6 @@ export function NavigationBar() {
 
     return (
         <nav
-            ref={navRef}
             className={`navigation-bar ${isOpen ? 'is-open' : 'is-collapsed'}`}
             aria-label="Primary"
         >

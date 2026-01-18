@@ -1,16 +1,44 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { HeadlineSection } from './sections/HeadlineSection'
 import { AboutSection } from './sections/AboutSection'
 import { ProjectsSection } from './sections/ProjectsSection'
 import { ContactSection } from './sections/ContactSection'
 import { NavigationBar } from './components/NavigationBar'
 export default function App() {
+  const [isNavOpen, setIsNavOpen] = useState(false)
+  const welcomeInViewRef = useRef(true)
 
+  const handleHeadlineIntroComplete = useCallback(() => {
+    // Only auto-open if we're still in the Welcome/Headline section.
+    if (welcomeInViewRef.current) setIsNavOpen(true)
+  }, [])
+
+  useEffect(() => {
+    const welcomeEl = document.getElementById('welcome')
+    if (!welcomeEl) return
+
+    let prevInView = true
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const inView = !!entry?.isIntersecting
+        welcomeInViewRef.current = inView
+
+        // Close every time we EXIT the headline section.
+        if (prevInView && !inView) setIsNavOpen(false)
+        prevInView = inView
+      },
+      { threshold: 0.15 }
+    )
+
+    observer.observe(welcomeEl)
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <>
-      <NavigationBar />
+      <NavigationBar isOpen={isNavOpen} setIsOpen={setIsNavOpen} />
       <section id="welcome" className="app-section">
-        <HeadlineSection />
+        <HeadlineSection onIntroComplete={handleHeadlineIntroComplete} />
       </section>
       <section id="about" className="app-section">
         <AboutSection />
