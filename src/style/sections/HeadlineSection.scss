@@ -41,3 +41,18 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+
+
+@media (max-width: 600px) {
+  .headline-section {
+    gap: 3rem;
+    
+    .headline-logo {
+      font-size: 5rem;
+    }
+
+    .headline-subtitle {
+      font-size: 0.8rem;
+    }
+  }
+}
