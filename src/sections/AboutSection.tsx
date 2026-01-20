@@ -7,11 +7,64 @@ import { storageService } from '../services/storage.service'
 gsap.registerPlugin(ScrollTrigger)
 
 export function AboutSection() {
+  const MOBILE_BREAKPOINT_PX = 600
+  const getIsMobile = () => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT_PX}px)`).matches
+  }
+
+  const clamp01 = (n: number) => Math.max(0, Math.min(1, n))
+
+  const parseCssColorToRgb = (input: string): { r: number; g: number; b: number } | null => {
+    const value = input.trim()
+    if (!value) return null
+
+    // hex: #rgb or #rrggbb
+    if (value.startsWith('#')) {
+      const hex = value.slice(1)
+      if (hex.length === 3) {
+        const r = parseInt(hex[0] + hex[0], 16)
+        const g = parseInt(hex[1] + hex[1], 16)
+        const b = parseInt(hex[2] + hex[2], 16)
+        return { r, g, b }
+      }
+      if (hex.length === 6) {
+        const r = parseInt(hex.slice(0, 2), 16)
+        const g = parseInt(hex.slice(2, 4), 16)
+        const b = parseInt(hex.slice(4, 6), 16)
+        return { r, g, b }
+      }
+      return null
+    }
+
+    // rgb() / rgba()
+    const rgbMatch = value.match(
+      /^rgba?\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)(?:\s*,\s*([0-9.]+))?\s*\)$/i
+    )
+    if (rgbMatch) {
+      return {
+        r: Number(rgbMatch[1]),
+        g: Number(rgbMatch[2]),
+        b: Number(rgbMatch[3])
+      }
+    }
+
+    return null
+  }
+
+  const mixColors = (a: { r: number; g: number; b: number }, b: { r: number; g: number; b: number }, t: number) => {
+    const tt = clamp01(t)
+    const r = Math.round(a.r + (b.r - a.r) * tt)
+    const g = Math.round(a.g + (b.g - a.g) * tt)
+    const bl = Math.round(a.b + (b.b - a.b) * tt)
+    return `rgb(${r}, ${g}, ${bl})`
+  }
   const sectionRef = useRef<HTMLElement | null>(null)
   const titleRef = useRef<HTMLHeadingElement | null>(null)
   const myselfRef = useRef<HTMLSpanElement | null>(null)
   const [activeFactIndex, setActiveFactIndex] = useState<number | null>(null)
-  const [hasMeShifted, setHasMeShifted] = useState(false)
+  const [isMobile, setIsMobile] = useState(getIsMobile)
+  const [hasMeShifted, setHasMeShifted] = useState(() => (getIsMobile() ? true : false))
 
   // Normalize facts coming from storage so AboutInfo always receives
   // { title, description, images: string[] }
@@ -24,6 +77,29 @@ export function AboutSection() {
   )
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT_PX}px)`)
+    const onChange = () => setIsMobile(mq.matches)
+
+    // Initialize + subscribe
+    onChange()
+    if (typeof mq.addEventListener === 'function') {
+      mq.addEventListener('change', onChange)
+      return () => mq.removeEventListener('change', onChange)
+    }
+
+    // Fallback for older browsers
+    mq.addListener(onChange)
+    return () => mq.removeListener(onChange)
+  }, [])
+
+  useEffect(() => {
+    // Mobile UX: avoid pinned scrolling interactions; rely on taps/clicks instead.
+    if (isMobile) {
+      setHasMeShifted(true)
+      return
+    }
+
     const ctx = gsap.context(() => {
       if (!sectionRef.current || !titleRef.current) return
 
@@ -174,7 +250,44 @@ export function AboutSection() {
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [isMobile])
+
+  useEffect(() => {
+    // Mobile-only: when entering the About section, set background to a midpoint
+    // between --background1 and --background2.
+    if (!isMobile) return
+    if (!sectionRef.current) return
+
+    const rootStyle = getComputedStyle(document.documentElement)
+    const background1 = rootStyle.getPropertyValue('--background1').trim()
+    const background2 = rootStyle.getPropertyValue('--background2').trim()
+    const c1 = parseCssColorToRgb(background1)
+    const c2 = parseCssColorToRgb(background2)
+    const midpoint = c1 && c2 ? mixColors(c1, c2, 0.5) : background1 || '#2b033f'
+
+    const prevBackground = document.body.style.backgroundColor
+
+    const apply = (inView: boolean) => {
+      gsap.killTweensOf(document.body)
+      gsap.to(document.body, {
+        backgroundColor: inView ? midpoint : prevBackground || background1,
+        duration: 0.35,
+        ease: 'power2.inOut'
+      })
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => apply(!!entry?.isIntersecting),
+      { threshold: 0.25 }
+    )
+
+    observer.observe(sectionRef.current)
+    return () => {
+      observer.disconnect()
+      // Restore on cleanup (e.g. resize back to desktop)
+      apply(false)
+    }
+  }, [isMobile])
 
   const showMeFact = hasMeShifted && activeFactIndex === null
 
@@ -193,6 +306,11 @@ export function AboutSection() {
           <span
             ref={myselfRef}
             className={showMeFact ? 'about-section__me about-section__me--active' : 'about-section__me'}
+            onClick={() => {
+              // Allow quickly returning to the "ME" fact on mobile.
+              setActiveFactIndex(null)
+              setHasMeShifted(true)
+            }}
           >
             ME
           </span>
@@ -205,7 +323,16 @@ export function AboutSection() {
                 'about-fact' + (activeFactIndex === index ? ' about-fact--active' : '')
               }
             >
-              <p>{fact.title}</p>
+              <button
+                type="button"
+                className="about-fact__button"
+                onClick={() => {
+                  setActiveFactIndex(index)
+                  setHasMeShifted(false)
+                }}
+              >
+                <p>{fact.title}</p>
+              </button>
             </li>
           ))}
         </ul>
@@ -214,6 +341,7 @@ export function AboutSection() {
         facts={allFacts}
         activeIndex={activeImageIndex}
         showDescription={showDescription}
+        isMobile={isMobile}
       />
     </section>
   )

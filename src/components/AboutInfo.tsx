@@ -15,12 +15,14 @@ interface AboutInfoProps {
   facts: AboutInfoItem[]
   activeIndex: number | null
   showDescription: boolean
+  isMobile?: boolean
 }
 
 export function AboutInfo({
   facts,
   activeIndex,
-  showDescription
+  showDescription,
+  isMobile = false
 }: AboutInfoProps) {
   const [typedText, setTypedText] = useState('')
   const [seenFactIndices, setSeenFactIndices] = useState<Set<number>>(
@@ -191,7 +193,13 @@ export function AboutInfo({
 
   return (
     <div className="about-info">
-      {facts.map((fact, index) => {
+      {(isMobile
+        ? activeIndex === null
+          ? []
+          : [activeIndex]
+        : facts.map((_, index) => index)
+      ).map(index => {
+        const fact = facts[index]
         const rotations = imageRotations[index] || []
         const positions = imagePositions[index] || []
 
