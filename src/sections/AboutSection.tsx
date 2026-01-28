@@ -268,6 +268,7 @@ export function AboutSection() {
     const prevBackground = document.body.style.backgroundColor
 
     const apply = (inView: boolean) => {
+      if(!inView) return;
       gsap.killTweensOf(document.body)
       gsap.to(document.body, {
         backgroundColor: inView ? midpoint : prevBackground || background1,

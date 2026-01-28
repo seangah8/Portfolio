@@ -173,7 +173,7 @@ export function ProjectsSection() {
         anticipatePin: 1,
         onEnter: () => {
           // When Projects becomes active, snap to the starting project color (background2).
-          setBodyColorForProject(0, 0)
+          setBodyColorForProject(0, 0.35)
         },
         onEnterBack: () => {
           // When re-entering Projects from below, align the body to the current project color.
