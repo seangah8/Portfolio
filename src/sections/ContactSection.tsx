@@ -24,6 +24,8 @@ export function ContactSection() {
         const ctx = gsap.context(() => {
             if (!sectionRef.current) return
 
+            const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 600px)').matches
+
             const rootStyle = getComputedStyle(document.documentElement)
             const background3 = rootStyle.getPropertyValue('--background3').trim() || '#1b8775'
             const background4 = rootStyle.getPropertyValue('--background4').trim() || '#ffffff'
@@ -42,8 +44,17 @@ export function ContactSection() {
                 })
 
                 if (titleRef.current) {
+                    // Mobile-only UX: before clicking the title (idle), keep it white for contrast.
+                    // After clicking (animating/done), make it black.
+                    const mobileTitleColor =
+                        isContact
+                            ? phaseRef.current === 'idle'
+                                ? '#ffffff'
+                                : '#000000'
+                            : mainText
+
                     gsap.to(titleRef.current, {
-                        color: isContact ? '#000000' : mainText,
+                        color: isMobile ? mobileTitleColor : (isContact ? '#000000' : mainText),
                         duration: 0.35,
                         ease: 'power2.inOut',
                     })
@@ -211,6 +222,11 @@ export function ContactSection() {
         if (!sectionEl || !titleEl) return
 
         phaseRef.current = 'animating'
+
+        // Mobile-only: after clicking, ensure the title color becomes black.
+        if (typeof window !== 'undefined' && window.matchMedia('(max-width: 600px)').matches) {
+            titleEl.style.color = '#000000'
+        }
 
         const rootStyle = getComputedStyle(document.documentElement)
         const background5 = rootStyle.getPropertyValue('--background5').trim() || '#ffffff'

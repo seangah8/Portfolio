@@ -141,4 +141,18 @@
     .contact-lines--interactive .contact-line--from-right:hover .contact-line__title {
         transform: translateX(-50%);
     }
+
+    @media (max-width: 600px) {
+        h1 {
+            color: white;
+            width: 90%;
+            font-size: 2rem;
+            text-shadow: none;
+
+        }
+
+        --contact-spotlight-size: 0px;
+
+
+    }
 }
